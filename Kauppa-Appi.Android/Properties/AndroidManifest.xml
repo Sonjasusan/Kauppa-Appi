@@ -3,4 +3,8 @@
     <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="33" />
     <application android:label="Kauppa_Appi.Android" android:theme="@style/MainTheme"></application>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+	<!--kalenteriin nämä luvat:-->
+	<!--<uses-permission android:name="android.permisson.READ_CALENDAR"/>-->
+	<!--<uses-permission android:name="android.permission.WRITE_CALENDAR"/>-->
 </manifest>
