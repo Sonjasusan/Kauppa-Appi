@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using Xamarin.Essentials;
 
 namespace Kauppa_Appi
 {
@@ -13,6 +14,12 @@ namespace Kauppa_Appi
         public MainPage()
         {
             InitializeComponent();
+        }
+
+        private void navbutton_Clicked(object sender, EventArgs e)
+        {
+           //Navigation.PushAsync(new KaupassakavijatPage()); //Navigoidaan Kaupassakävijät sivulle
+
         }
     }
 }
