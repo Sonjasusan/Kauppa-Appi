@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Kauppa_Appi.KauppaostoksetPage">
+    <ContentPage.Content>
+        <StackLayout>
+            <Frame BackgroundColor="AliceBlue" Padding="16">
+                <Label Text="KauppaAppi"
+               FontSize="28"
+               FontAttributes="Bold"
+               TextColor="Blue"
+               HorizontalTextAlignment="Center"
+               FontFamily="Arial"
+               HorizontalOptions="CenterAndExpand"/>
+            </Frame>
+
+            <Button x:Name="startbutton" Text="Lisää tuote ostettavaksi" Clicked="startbutton_Clicked"></Button>
+            <Button x:Name="Lisaa" Text="Lisää kauppalistalle" Clicked="Lisaa_Clicked"/>
+
+            <Label x:Name="ko_lataus" />
+            
+            <!--Kauppaostoslistaus-->
+            
+            <ListView x:Name="koList" SelectionMode="Single" Margin="25, 0" SeparatorColor="ForestGreen" BackgroundColor="Azure">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <TextCell Text="{Binding Title}" Detail="{Binding Description}"/>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+
+            <Label x:Name="lat_label"></Label>
+            <Label x:Name="lon_label"></Label>
+
+            <StackLayout Orientation="Horizontal">
+
+                <StackLayout Orientation="Horizontal">
+
+
+                    <Button x:Name="ostobutton" Text="Merkitse ostetuksi" Clicked="ostobutton_Clicked"></Button>
+
+                    <Button x:Name="navbutton" Text="Takasin" Clicked="navbutton_Clicked"></Button>
+
+                </StackLayout>
+            </StackLayout>
+            <Frame BackgroundColor="AliceBlue" Padding="16" CornerRadius="0">
+                <Label Text="♥ made by Sonja" HorizontalTextAlignment="Center" TextColor="Gray" FontSize="14"/>
+            </Frame>
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
