@@ -6,6 +6,7 @@ namespace Kauppa_Appi
 {
     public static class Constants
 {
-        public static string ServiceUri = "https://kauppaappibackend.azurewebsites.net";
+        //azurea varten
+        public static string ServiceUri = "https://kauppaappibackend.azurewebsites.net"; 
 }
 }

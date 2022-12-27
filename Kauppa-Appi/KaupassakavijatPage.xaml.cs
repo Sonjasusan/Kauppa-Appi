@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using Xamarin.Forms;
-using Kauppa_Appi.Models;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.Net.Http;
+using Kauppa_Appi.Models;
 
 namespace Kauppa_Appi
 {
@@ -30,10 +29,9 @@ namespace Kauppa_Appi
         public KaupassakavijatPage()
         {
             InitializeComponent();
-
+            
             //Kutsutaan alempana määriteltyä funktiota kun ohjelma käynnistyy
             LoadDataFromRestAPI();
-
 
             async void LoadDataFromRestAPI()
             {
@@ -83,9 +81,10 @@ namespace Kauppa_Appi
 
                 }
             }
+
         }
 
-        // Hakutoiminto
+        // Hakutoiminto - haetaan kaupassakävijöitä
         private void OnSearchBarButtonPressed(object sender, EventArgs args)
         {
             SearchBar searchBar = (SearchBar)sender;
@@ -96,15 +95,15 @@ namespace Kauppa_Appi
 
         }
 
-        //Hakukenttä palautuu aiempaan näkymään (jossa näkyi kaikki työntekijät)
-        void OnTextChanged(object sender, EventArgs e)
+        //Hakukenttä palautuu aiempaan näkymään (jossa näkyi kaikki kaupassakävijät)
+        void OnTextChanged(object sender, EventArgs e) //OnTextChanged
         {
             SearchBar searchBar = (SearchBar)sender;
             string searchText = searchBar.Text;
             kaList.ItemsSource = dataa.Where(x => x.Nimi.ToLower().Contains(searchText.ToLower()));
         }
 
-        async void navbutton_Clicked(object sender, EventArgs e)
+        async void navbutton_Clicked(object sender, EventArgs e) //buttoni kauppaostoksiin
         {
             Kaupassakavijat kaup = (Kaupassakavijat)kaList.SelectedItem;
             if (kaup == null)
@@ -121,26 +120,24 @@ namespace Kauppa_Appi
         }
 
         //LISÄTÄÄN KAUPASSAKAVIJA
-        async private void lisaa_Clicked(object sender, EventArgs e)
+        async private void Lisaa_Clicked(object sender, EventArgs e)
         {
             try
             {
                 string nimi = await DisplayPromptAsync("Nimi", "Anna kaupassakävijän nimi (etunimi riittää)");
-                //bool Aktiivinen = bool.Parse(await DisplayPromptAsync("Aktiivisuus", "Anna aktiivisuustila: (True/False) "));
-                //await DisplayAlert(Aktiivinen.ToString(), "Kirjoita true tai false", "Ok");
 
                 Kaupassakavijat kaupassakavija = new Kaupassakavijat()
                 {
+                    //Käyttäjä syöttää
                     Nimi = nimi,
+
+                   //Tulee automaattisesti
                     Active = true,
                     CreatedAt = DateTime.Now,
                 };
 
                 HttpClientHandler insecureHandler = GetInsecureHandler();
                 HttpClient client = new HttpClient(insecureHandler);
-                //#else
-                //HttpClient client = new HttpClient();
-                //#endif
                 client.BaseAddress = new Uri("https://10.0.2.2:7292/");
 
                 // Muutetaan em. data objekti Jsoniksi
@@ -148,7 +145,7 @@ namespace Kauppa_Appi
                 StringContent content = new StringContent(input, Encoding.UTF8, "application/json");
 
                 // Lähetetään serialisoitu objekti back-endiin Post pyyntönä
-                HttpResponseMessage message = await client.PostAsync("/api/kaupassakavijalisays", content);
+                HttpResponseMessage message = await client.PostAsync("/api/KaupassakavijaLisays", content);
 
 
                 // Otetaan vastaan palvelimen vastaus
@@ -179,5 +176,18 @@ namespace Kauppa_Appi
 
         }
 
+        // MUOKATAAN KAUPASSAKÄVIJÄÄ
+        private void Muokkaa_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        //POISTETAAN KAUPASSAKÄVIJÄ
+        private void Poista_Clicked(object sender, EventArgs e)
+        {
+
+        }
+
+        
     }
 }

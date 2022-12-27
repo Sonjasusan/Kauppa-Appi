@@ -34,6 +34,7 @@ namespace Kauppa_Appi
             };
             return handler;
         }
+
         async void LoadDataFromRestAPI()
         {
 
@@ -117,7 +118,6 @@ namespace Kauppa_Appi
                     await DisplayAlert("Virhe", ex.ToString(), "OK");
                 }
             }
-            //------------------------------------------
 
             LoadDataFromRestAPI();
 
