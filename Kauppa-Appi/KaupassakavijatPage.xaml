@@ -44,8 +44,8 @@
                                                 TextColor="DarkBlue"
                                                FontSize="22"
                                                VerticalOptions="StartAndExpand" />
-                                    <Button x:Name="muokkaa" Text="Muokkaa" TextColor="Black" Clicked="Muokkaa_Clicked"></Button>
-                                    <Button x:Name="poista" Text="Poista" TextColor="Red" Clicked="Poista_Clicked"></Button>
+                                    <Button x:Name="muokkaa" Text="Muokkaa" TextColor="Black" FontSize="Small" Clicked="Muokkaa_Clicked"></Button>
+                                    <Button x:Name="poista" Text="Poista" TextColor="Red" FontSize="Small" Clicked="Poista_Clicked"></Button>
                                     </StackLayout>
                                 </Frame>
                             </ContentView>

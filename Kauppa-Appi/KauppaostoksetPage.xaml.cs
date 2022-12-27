@@ -333,5 +333,10 @@ namespace Kauppa_Appi
             }
 
         }
+
+        private void Poista_Clicked(object sender, EventArgs e)
+        {
+
+        }
     }
 }

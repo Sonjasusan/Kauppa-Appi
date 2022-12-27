@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Xamarin.Forms;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using Kauppa_Appi.Models;
+using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
+
 
 namespace Kauppa_Appi
 {
+    [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class KaupassakavijatPage : ContentPage
     {
         ObservableCollection<Kaupassakavijat> dataa = new ObservableCollection<Kaupassakavijat>();
@@ -142,10 +145,10 @@ namespace Kauppa_Appi
 
                 // Muutetaan em. data objekti Jsoniksi
                 string input = JsonConvert.SerializeObject(kaupassakavija);
-                StringContent content = new StringContent(input, Encoding.UTF8, "application/json");
+                StringContent content = new StringContent(input, Encoding.UTF8,"application/json");
 
                 // Lähetetään serialisoitu objekti back-endiin Post pyyntönä
-                HttpResponseMessage message = await client.PostAsync("/api/KaupassakavijaLisays", content);
+                HttpResponseMessage message = await client.PostAsync("/api/kaupassakavijalisays", content);
 
 
                 // Otetaan vastaan palvelimen vastaus
@@ -158,28 +161,33 @@ namespace Kauppa_Appi
                 {
 
                     await DisplayAlert("Valmis!", "Kaupassakävijä on nyt tallennettu onnistuneesti ja valmiina valittavaksi!", "Sulje");
-                    await Navigation.PushAsync(new KaupassakavijatPage()); //Päivitetään sivu
-
+                    await Navigation.PushAsync(new KaupassakavijatPage()); //Päivitetään sivu                   
                 }
+
                 else
                 {
                     await DisplayAlert("Virhe", "Virhe palvelimella.", "Sulje");
                 }
-
             }
+
             catch (Exception ex) // Otetaan poikkeus ex muuttujaan ja sijoitetaan errorMessageen
             {
-
                 string errorMessage = ex.GetType().Name + ": " + ex.Message;
-
             }
-
         }
 
         // MUOKATAAN KAUPASSAKÄVIJÄÄ
         private void Muokkaa_Clicked(object sender, EventArgs e)
         {
+            try
+            {
 
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         //POISTETAAN KAUPASSAKÄVIJÄ
