@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Kauppa_Appi.Models
+namespace RuokaAppiBackend.Models
 {
-    internal class Kaupassakavijat
-{
+    public partial class Kaupassakavijat
+    {
+        public Kaupassakavijat()
+        {
+            Timesheets = new HashSet<Timesheet>();
+        }
+
         public int IdKavija { get; set; }
-        public string Nimi { get; set; } /*= null!*/
+        public string Nimi { get; set; }
         public DateTime? CreatedAt { get; set; }
         public bool Active { get; set; }
 

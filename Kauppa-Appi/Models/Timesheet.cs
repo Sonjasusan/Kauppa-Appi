@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace Kauppa_Appi.Models
+namespace RuokaAppiBackend.Models
 {
-    internal class Timesheet
-{
+    public partial class Timesheet
+    {
         public int IdTimesheet { get; set; }
         public int IdKavija { get; set; }
         public int IdKauppaOstos { get; set; }
@@ -21,7 +20,7 @@ namespace Kauppa_Appi.Models
         public string StartLatitude { get; set; }
         public string StartLongitude { get; set; }
 
-        public virtual Kauppaostokset IdKauppaOstosNavigation { get; set; } /*= null!;*/
-        public virtual Kaupassakavijat IdKavijaNavigation { get; set; } /*= null!;*/
+        public virtual KauppaOstokset IdKauppaOstosNavigation { get; set; }
+        public virtual Kaupassakavijat IdKavijaNavigation { get; set; }
     }
 }

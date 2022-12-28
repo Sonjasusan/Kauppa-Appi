@@ -7,21 +7,21 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
+using Xamarin.Essentials; //Xamarin essentials -kirjasto 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using Kauppa_Appi.Models;
+using RuokaAppiBackend.Models; //<- Käytetään backendistä tuotuja modeleita
 
 namespace Kauppa_Appi
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class KauppaostoksetPage : ContentPage
     {
-        ObservableCollection<Kauppaostokset> dataa = new ObservableCollection<Kauppaostokset>();
+        ObservableCollection<KauppaOstokset> dataa = new ObservableCollection<KauppaOstokset>();
 
-        int kaupId;
-        string lat;
-        string lon;
+        int kaupId; //kaupassakävijän id
+        string lat; //sijainti leveyspiiri (longitude)
+        string lon; //sijainti pituuspiiri (latitude)
 
         HttpClientHandler GetInsecureHandler()
         {
@@ -50,13 +50,13 @@ namespace Kauppa_Appi
                 client.BaseAddress = new Uri("https://10.0.2.2:7292/");
                 string json = await client.GetStringAsync("api/kauppaostokset");
 
-                IEnumerable<Kauppaostokset> ko = JsonConvert.DeserializeObject<Kauppaostokset[]>(json);
+                IEnumerable<KauppaOstokset> ko = JsonConvert.DeserializeObject<KauppaOstokset[]>(json);
 
-                ObservableCollection<Kauppaostokset> dataa = new ObservableCollection<Kauppaostokset>(ko);
+                ObservableCollection<KauppaOstokset> dataa = new ObservableCollection<KauppaOstokset>(ko);
                 dataa = dataa;
 
                 // Asetetaan datat näkyviin xaml tiedostossa olevalle listalle
-                koList.ItemsSource = dataa;
+                koList.ItemsSource = dataa; //kauppaostoslista
 
                 // Tyhjennetään latausilmoitus label
                 ko_lataus.Text = "";
@@ -65,6 +65,7 @@ namespace Kauppa_Appi
 
             catch (Exception e)
             {
+                //Jos listauksen lataaminen ei onnistu; näytetään virhe ilmoitus
                 await DisplayAlert("Virhe", e.Message.ToString(), "SELVÄ!");
 
             }
@@ -73,15 +74,15 @@ namespace Kauppa_Appi
         public KauppaostoksetPage(int id)
         {
             InitializeComponent();
-            kaupId = id;
+            kaupId = id; //kaupassakävijän id
 
             //Annetaan latausilmoitukset
-            ko_lataus.Text = "Ladataan kauppaostoksia. . .";
-            lon_label.Text = "Haetaan sijaintiasi. . .";
+            ko_lataus.Text = "Ladataan kauppaostoksia. . ."; //kauppaostoslistaus
+            lon_label.Text = "Haetaan sijaintiasi. . ."; //sijainti
 
 
             //SIJAINTI
-            GetCurrentLocation();
+            GetCurrentLocation(); //haetaan käyttäjän tämänhetkinen sijainti
             async void GetCurrentLocation()
             {
                 try
@@ -103,15 +104,15 @@ namespace Kauppa_Appi
                 }
                 catch (FeatureNotSupportedException fnsEx)
                 {
-                    await DisplayAlert("Virhe", fnsEx.ToString(), "Ok");
+                    await DisplayAlert("Virhe", fnsEx.ToString(), "OK");
                 }
                 catch (FeatureNotEnabledException fneEx)
                 {
-                    await DisplayAlert("Virhe", fneEx.ToString(), "Ok");
+                    await DisplayAlert("Virhe", fneEx.ToString(), "OK");
                 }
                 catch (PermissionException pEx)
                 {
-                    await DisplayAlert("Virhe", pEx.ToString(), "Ok");
+                    await DisplayAlert("Virhe", pEx.ToString(), "OK");
                 }
                 catch (Exception ex)
                 {
@@ -127,10 +128,10 @@ namespace Kauppa_Appi
         //ALOITETAAN KAUPPAOSTOKSEN TEKO
         async void startbutton_Clicked(object sender, EventArgs e)
         {
-            Kauppaostokset ko = (Kauppaostokset)koList.SelectedItem;
+            KauppaOstokset ko = (KauppaOstokset)koList.SelectedItem;
             if (ko == null)
             {
-                await DisplayAlert("Valinta puuttuu", "Valitse tuote", "Ok");
+                await DisplayAlert("Valinta puuttuu", "Valitse tuote", "OK");
                 return;
             }
             try
@@ -193,7 +194,7 @@ namespace Kauppa_Appi
         //MERKITÄÄN OSTETUKSI
         async void ostobutton_Clicked(object sender, EventArgs e)
         {
-            Kauppaostokset ko = (Kauppaostokset)koList.SelectedItem;
+            KauppaOstokset ko = (KauppaOstokset)koList.SelectedItem;
 
             if (ko == null)
             {
@@ -278,7 +279,7 @@ namespace Kauppa_Appi
                 string kuvaus = await DisplayPromptAsync("Kuvaus", "Kuvaus: ");
 
 
-                Kauppaostokset kauppaostos = new Kauppaostokset()
+                KauppaOstokset kauppaostos = new KauppaOstokset()
                 {
                     //IdKauppaOstos = kaupId,
 
@@ -311,10 +312,10 @@ namespace Kauppa_Appi
                 // Otetaan vastaan palvelimen vastaus
                 string reply = await message.Content.ReadAsStringAsync();
 
-                //Asetetaan vastaus serialisoituna success muuttujaan
+                //Asetetaan vastaus serialisoituna success boolean muuttujaan (joka on true tai false)
                 bool success = JsonConvert.DeserializeObject<bool>(reply);
 
-                if (success)  // Jos onnistuu näytetään alert viesti
+                if (success)  // Jos onnistuu näytetään alert viesti -> success = true
                 {
                     await DisplayAlert("Valmis!", "Tuote on nyt lisätty onnistuneesti kauppalistalle", "Sulje");
                     LoadDataFromRestAPI(); //ajaa ylläolevan metodin (lataa sivun tietoineen)
@@ -334,9 +335,11 @@ namespace Kauppa_Appi
 
         }
 
+        //POISTO
+
         private void Poista_Clicked(object sender, EventArgs e)
         {
-
+            //Tähän tulee poisto
         }
     }
 }

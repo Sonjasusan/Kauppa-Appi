@@ -5,10 +5,10 @@ using System.Text;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.Net.Http;
-using Kauppa_Appi.Models;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-
+using System.Diagnostics;
+using RuokaAppiBackend.Models; //<- Käytetään backendistä tuotuja modeleita
 
 namespace Kauppa_Appi
 {
@@ -71,15 +71,15 @@ namespace Kauppa_Appi
                     dataa = dataa2;
 
                     // Asetetaan datat näkyviin xaml tiedostossa olevalle listalle
-                    kaList.ItemsSource = dataa;
+                    kaList.ItemsSource = dataa; //<- Kaupassakävijät listaus
 
                     // Tyhjennetään latausilmoitus label
                     kavija_lataus.Text = "";
-
                 }
 
                 catch (Exception e)
                 {
+                    //Jos ei onnistuttu lataamaan kaupassakävijöitä; annetaan virhe ilmoitus
                     await DisplayAlert("Virhe", e.Message.ToString(), "SELVÄ!");
 
                 }
@@ -87,38 +87,39 @@ namespace Kauppa_Appi
 
         }
 
-        // Hakutoiminto - haetaan kaupassakävijöitä
+        // HAKUTOIMINTO - haetaan kaupassakävijöitä
         private void OnSearchBarButtonPressed(object sender, EventArgs args)
         {
             SearchBar searchBar = (SearchBar)sender;
             string searchText = searchBar.Text;
             searchBar.TextChanged += OnTextChanged; //teksti muuttuu
 
+            //Jos nimi sisältää pienen tai ison kirjaimen
             kaList.ItemsSource = dataa.Where(x => x.Nimi.ToLower().Contains(searchText.ToLower()));
-
         }
 
         //Hakukenttä palautuu aiempaan näkymään (jossa näkyi kaikki kaupassakävijät)
-        void OnTextChanged(object sender, EventArgs e) //OnTextChanged
+        void OnTextChanged(object sender, EventArgs e) //OnTextChanged - teksti muuttuu
         {
             SearchBar searchBar = (SearchBar)sender;
             string searchText = searchBar.Text;
             kaList.ItemsSource = dataa.Where(x => x.Nimi.ToLower().Contains(searchText.ToLower()));
         }
 
-        async void navbutton_Clicked(object sender, EventArgs e) //buttoni kauppaostoksiin
+        async void navbutton_Clicked(object sender, EventArgs e) //buttoni kauppaostoksiin siirtymistä varten
         {
             Kaupassakavijat kaup = (Kaupassakavijat)kaList.SelectedItem;
-            if (kaup == null)
+            if (kaup == null) //jos kaupassakävijää ei olla valittu - eli ei ole id:tä
             {
                 await DisplayAlert("Valinta puuttuu", "Valitse kaupassakävijä jatkaaksesi!", "OK");
                 return;
-
             }
+
             else
             {
                 int kaupId = kaup.IdKavija;
                 await Navigation.PushAsync(new KauppaostoksetPage(kaupId)); //Navigoidaan KauppaOstoksetPagelle
+                                                                            //kaupId = valitun kaupassakävijän id
             }
         }
 
@@ -129,56 +130,67 @@ namespace Kauppa_Appi
             {
                 string nimi = await DisplayPromptAsync("Nimi", "Anna kaupassakävijän nimi (etunimi riittää)");
 
-                Kaupassakavijat kaupassakavija = new Kaupassakavijat()
+                Kaupassakavijat kavija = new Kaupassakavijat()
                 {
                     //Käyttäjä syöttää
                     Nimi = nimi,
 
-                   //Tulee automaattisesti
+                    //Tulee automaattisesti
                     Active = true,
-                    CreatedAt = DateTime.Now,
+                    CreatedAt = DateTime.Now
                 };
 
                 HttpClientHandler insecureHandler = GetInsecureHandler();
                 HttpClient client = new HttpClient(insecureHandler);
-                client.BaseAddress = new Uri("https://10.0.2.2:7292/");
+                //#else
+                //HttpClient client = new HttpClient();
+                //#endif
+                client.BaseAddress = new Uri("https://10.0.2.2:7292/"); //lokaalia ajoa varten
 
                 // Muutetaan em. data objekti Jsoniksi
-                string input = JsonConvert.SerializeObject(kaupassakavija);
-                StringContent content = new StringContent(input, Encoding.UTF8,"application/json");
+                string input = JsonConvert.SerializeObject(kavija);
+                StringContent content = new StringContent(input, Encoding.UTF8, "application/json");
 
                 // Lähetetään serialisoitu objekti back-endiin Post pyyntönä
-                HttpResponseMessage message = await client.PostAsync("/api/kaupassakavijalisays", content);
+                HttpResponseMessage message = await client.PostAsync("/api/KaupassakavijaLisays", content);
 
 
                 // Otetaan vastaan palvelimen vastaus
                 string reply = await message.Content.ReadAsStringAsync();
 
-                //Asetetaan vastaus serialisoituna success muuttujaan
+                //Asetetaan vastaus serialisoituna success boolean muuttujaan (joka on true tai false)
                 bool success = JsonConvert.DeserializeObject<bool>(reply);
 
-                if (success)  // Jos onnistuu näytetään alert viesti
+                if (success)  // Jos onnistuu -> success = true
                 {
+                    //näytetään alert viesti käyttäjälle kaupassakävijän lisäyksen onnistumisesta
+                    await DisplayAlert("Valmis!", "Kaupassakävijä tallennettu onnistuneesti!", "Sulje"); 
 
-                    await DisplayAlert("Valmis!", "Kaupassakävijä on nyt tallennettu onnistuneesti ja valmiina valittavaksi!", "Sulje");
-                    await Navigation.PushAsync(new KaupassakavijatPage()); //Päivitetään sivu                   
+
+                    await Navigation.PushAsync(new KaupassakavijatPage()); //Päivitetään sivu uudelleen
+
                 }
 
-                else
+                else //muuten - jos ei onnistu -> success = false
                 {
-                    await DisplayAlert("Virhe", "Virhe palvelimella.", "Sulje");
+                    await DisplayAlert("Virhe", "Virhe palvelimella", "Sulje"); //annetaan virheilmoitus
+                    Debug.WriteLine("Epäonnistui");
                 }
+
             }
-
             catch (Exception ex) // Otetaan poikkeus ex muuttujaan ja sijoitetaan errorMessageen
             {
+
                 string errorMessage = ex.GetType().Name + ": " + ex.Message;
+
             }
+
         }
 
-        // MUOKATAAN KAUPASSAKÄVIJÄÄ
-        private void Muokkaa_Clicked(object sender, EventArgs e)
+        //POISTETAAN KAUPASSAKÄVIJÄ
+        private void Poista_Clicked(object sender, EventArgs e)
         {
+            //tähän tulee poisto
             try
             {
 
@@ -190,12 +202,10 @@ namespace Kauppa_Appi
             }
         }
 
-        //POISTETAAN KAUPASSAKÄVIJÄ
-        private void Poista_Clicked(object sender, EventArgs e)
+        //MUOKATAAN KAUPASSAKÄVIJÄÄ
+        private void Muokkaa_Clicked(object sender, EventArgs e)
         {
-
+            //tähän tulee muokkaus
         }
-
-        
     }
 }

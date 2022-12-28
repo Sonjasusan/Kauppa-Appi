@@ -9,7 +9,7 @@ namespace RuokaAppiBackend.Models
     {
 
         public int IdKauppaOstos { get; set; }
-        public string Title { get; set; } /*= null!;*/
+        public string Title { get; set; }
         public string Description { get; set; }
         public bool Inprogress { get; set; }
         public DateTime? CreatedAt { get; set; }
