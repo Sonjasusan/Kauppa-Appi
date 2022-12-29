@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
 using Xamarin.Forms;
-using Xamarin.Essentials;
+using Xamarin.Forms.Xaml;
 
 namespace Kauppa_Appi
 {
-    public partial class MainPage : ContentPage
+	[XamlCompilation(XamlCompilationOptions.Compile)]
+public partial class OhjePage : ContentPage
+{
+    public OhjePage()
     {
-        public MainPage()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+    }
 
-        private void kaupassakavijatsivulle_Clicked(object sender, EventArgs e)
+        private void kaupassakavijoihin_Clicked(object sender, EventArgs e)
         {
             Navigation.PushAsync(new KaupassakavijatPage()); //Navigoidaan Kaupassakävijät sivulle
         }

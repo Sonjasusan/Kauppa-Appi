@@ -11,6 +11,7 @@ using Xamarin.Essentials; //Xamarin essentials -kirjasto
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using RuokaAppiBackend.Models; //<- Käytetään backendistä tuotuja modeleita
+using System.Security.Cryptography.X509Certificates;
 
 namespace Kauppa_Appi
 {
@@ -47,7 +48,8 @@ namespace Kauppa_Appi
 #else
                     HttpClient client = new HttpClient();
 #endif
-                client.BaseAddress = new Uri("https://10.0.2.2:7292/");
+                //client.BaseAddress = new Uri("https://10.0.2.2:7292/"); <-Lokaali
+                client.BaseAddress = new Uri(Constants.ServiceUri); //<- Käytetään Constants.cs:ssä määritetty azuren osoitetta
                 string json = await client.GetStringAsync("api/kauppaostokset");
 
                 IEnumerable<KauppaOstokset> ko = JsonConvert.DeserializeObject<KauppaOstokset[]>(json);
@@ -156,7 +158,8 @@ namespace Kauppa_Appi
 #else
                     HttpClient client = new HttpClient();
 #endif
-                client.BaseAddress = new Uri("https://10.0.2.2:7292/");
+                //client.BaseAddress = new Uri("https://10.0.2.2:7292/");
+                client.BaseAddress = new Uri(Constants.ServiceUri);
 
 
                 // Muutetaan em. data objekti Jsoniksi
@@ -226,7 +229,8 @@ namespace Kauppa_Appi
 #else
                     HttpClient client = new HttpClient();
 #endif
-                client.BaseAddress = new Uri("https://10.0.2.2:7292/");
+                //client.BaseAddress = new Uri("https://10.0.2.2:7292/");
+                client.BaseAddress = new Uri(Constants.ServiceUri);
 
                 // Muutetaan em. data objekti Jsoniksi
                 string input = JsonConvert.SerializeObject(op);
@@ -300,7 +304,8 @@ namespace Kauppa_Appi
                 //#else
                 //HttpClient client = new HttpClient();
                 //#endif
-                client.BaseAddress = new Uri("https://10.0.2.2:7292/");
+                //client.BaseAddress = new Uri("https://10.0.2.2:7292/");
+                client.BaseAddress = new Uri(Constants.ServiceUri);
 
                 // Muutetaan em. data objekti Jsoniksi
                 string input = JsonConvert.SerializeObject(kauppaostos);
@@ -337,9 +342,61 @@ namespace Kauppa_Appi
 
         //POISTO
 
-        private void Poista_Clicked(object sender, EventArgs e)
+        private async void Poistobutton_Clicked(object sender, EventArgs e)
         {
-            //Tähän tulee poisto
+            KauppaOstokset kop = (KauppaOstokset)koList.SelectedItem;
+
+            if (kop == null)
+            {
+                await DisplayAlert("Valinta puuttuu", "Valitse poistettava tuote.", "OK");
+                return;
+            }
+
+            try
+            {              
+                     async Task PoistaTuote(int id)
+                    {
+                        HttpClientHandler insecureHandler = GetInsecureHandler();
+                        HttpClient client = new HttpClient(insecureHandler);
+                        //#else
+                        //HttpClient client = new HttpClient();
+                        //#endif
+                        client.BaseAddress = new Uri(Constants.ServiceUri);
+
+                        // Lähetetään serialisoitu objekti back-endiin Delete -pyyntönä
+                        HttpResponseMessage message = await client.DeleteAsync("/api/kauppaostokset" + id);
+
+                        // Otetaan vastaan palvelimen vastaus
+                        string reply = await message.Content.ReadAsStringAsync();
+
+                        //Asetetaan vastaus serialisoituna success boolean muuttujaan (joka on true tai false)
+                        bool success = JsonConvert.DeserializeObject<bool>(reply);
+
+                        if (success == true)
+                        {
+                            await DisplayAlert("Valmis!", "Tuote poistettu onnistuneesti listalta", "Sulje");
+                            await Navigation.PushAsync(new KauppaostoksetPage(kaupId));
+
+                        }
+
+                        if (success == false)
+                        {
+                            await DisplayAlert("Ei voida poistaa", "Valitse tuote", "OK");
+                        }
+                        else
+                        {
+                            await DisplayAlert("Virhe", "Virhe palvelimella", "OK");
+                        }
+                    }
+               
+            }
+            catch (Exception ex)
+            {
+
+                string errorMessage = ex.GetType().Name + ": " + ex.Message;
+                
+            }
         }
+
     }
 }

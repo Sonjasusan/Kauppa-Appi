@@ -13,6 +13,8 @@
                HorizontalOptions="CenterAndExpand"/>
             </Frame>
             <Button x:Name="lisaa" Text="Lisää kaupassakävijä" TextColor="Black" Clicked="Lisaa_Clicked"></Button>
+        <Button x:Name="ohjeisiin" Text="Ohje" TextColor="blue" BackgroundColor="AliceBlue" BorderColor="Blue"
+                    Clicked="Ohjeisiin_Clicked"></Button>
 
 
             <!-- Hakukenttä -->

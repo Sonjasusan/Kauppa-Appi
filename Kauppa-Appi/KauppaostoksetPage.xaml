@@ -39,6 +39,7 @@
 
 
                     <Button x:Name="ostobutton" Text="Merkitse ostetuksi" Clicked="ostobutton_Clicked"></Button>
+                    <Button x:Name="Poistobutton" Text="Poista tuote" TextColor="red" Clicked="Poistobutton_Clicked"></Button>
 
                     <Button x:Name="navbutton" Text="Takasin" Clicked="navbutton_Clicked"></Button>
 

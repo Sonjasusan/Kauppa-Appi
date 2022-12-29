@@ -60,7 +60,8 @@ namespace Kauppa_Appi
 #else
                     HttpClient client = new HttpClient();
 #endif
-                    client.BaseAddress = new Uri("https://10.0.2.2:7292/");
+                    //client.BaseAddress = new Uri("https://10.0.2.2:7292/"); <-lokaali                   
+                    client.BaseAddress = new Uri(Constants.ServiceUri); //<- Käytetään Constants.cs:ssä määritetty azuren osoitetta
                     string json = await client.GetStringAsync("api/kaupassakavijat");
 
                     IEnumerable<Kaupassakavijat> kaupassakavijat = JsonConvert.DeserializeObject<Kaupassakavijat[]>(json);
@@ -145,7 +146,8 @@ namespace Kauppa_Appi
                 //#else
                 //HttpClient client = new HttpClient();
                 //#endif
-                client.BaseAddress = new Uri("https://10.0.2.2:7292/"); //lokaalia ajoa varten
+                //client.BaseAddress = new Uri("https://10.0.2.2:7292/"); //lokaalia ajoa varten
+                client.BaseAddress = new Uri(Constants.ServiceUri); //Constans.cs:ssä määritetty azure osoite
 
                 // Muutetaan em. data objekti Jsoniksi
                 string input = JsonConvert.SerializeObject(kavija);
@@ -206,6 +208,13 @@ namespace Kauppa_Appi
         private void Muokkaa_Clicked(object sender, EventArgs e)
         {
             //tähän tulee muokkaus
+        }
+
+        //OHJESIVULLE
+        private void Ohjeisiin_Clicked(object sender, EventArgs e)
+        {
+            Navigation.PushAsync(new OhjePage()); //Navigoidaan Kaupassakävijät sivulle
+
         }
     }
 }
