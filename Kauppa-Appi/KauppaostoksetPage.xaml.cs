@@ -386,7 +386,7 @@ namespace Kauppa_Appi
                 HttpClient client = new HttpClient();
                 koList.SelectedItem= ko.IdKauppaOstos;
                 var id = ko.IdKauppaOstos;
-                var result = await client.DeleteAsync(Constants.ServiceUri + id);
+                var result = await client.DeleteAsync(Constants.ServiceUri + "/"+id);
 
 
                 if (result.IsSuccessStatusCode)  // Jos onnistuu näytetään alert viesti -> success = true
