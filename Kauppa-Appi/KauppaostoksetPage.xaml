@@ -14,17 +14,18 @@
                HorizontalOptions="CenterAndExpand"/>
             </Frame>
 
-            <Button x:Name="startbutton" Text="Lisää tuote ostettavaksi" Clicked="startbutton_Clicked"></Button>
-            <Button x:Name="Lisaa" Text="Lisää kauppalistalle" Clicked="Lisaa_Clicked"/>
+            <Button x:Name="startbutton" Text="Merkitse tuote ostettavaksi" Clicked="startbutton_Clicked"></Button>
+            <Button x:Name="Lisaa" Text="Lisää tuotteita kauppalistalle" Clicked="Lisaa_Clicked"/>
 
             <Label x:Name="ko_lataus" />
             
             <!--Kauppaostoslistaus-->
-            
-            <ListView x:Name="koList" SelectionMode="Single" Margin="25, 0" SeparatorColor="ForestGreen" BackgroundColor="Azure">
+
+            <ListView x:Name="koList" SelectionMode="Single"
+                Margin="25, 0" SeparatorColor="ForestGreen" BackgroundColor="Azure">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell Text="{Binding Title}" Detail="{Binding Description}"/>
+                        <TextCell Text="{Binding Title}" Detail="{Binding Description}" x:Name="koId"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
@@ -39,7 +40,8 @@
 
 
                     <Button x:Name="ostobutton" Text="Merkitse ostetuksi" Clicked="ostobutton_Clicked"></Button>
-                    <Button x:Name="Poistobutton" Text="Poista tuote" TextColor="red" Clicked="Poistobutton_Clicked"></Button>
+                    <Button x:Name="poistobutton" Text="Poista" TextColor="Red" Clicked="Poistobutton_Clicked"></Button>
+                    <Button x:Name="Muokkausbutton" Text="Muokkaa" TextColor="Green" Clicked="Muokkausbutton_Clicked"></Button>
 
                     <Button x:Name="navbutton" Text="Takasin" Clicked="navbutton_Clicked"></Button>
 

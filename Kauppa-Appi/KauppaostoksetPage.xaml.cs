@@ -12,6 +12,9 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using RuokaAppiBackend.Models; //<- Käytetään backendistä tuotuja modeleita
 using System.Security.Cryptography.X509Certificates;
+using System.Net.Sockets;
+using System.Net;
+using System.Diagnostics;
 
 namespace Kauppa_Appi
 {
@@ -23,6 +26,7 @@ namespace Kauppa_Appi
         int kaupId; //kaupassakävijän id
         string lat; //sijainti leveyspiiri (longitude)
         string lon; //sijainti pituuspiiri (latitude)
+        
 
         HttpClientHandler GetInsecureHandler()
         {
@@ -35,6 +39,26 @@ namespace Kauppa_Appi
             };
             return handler;
         }
+
+
+
+
+        //public async Task PoistaTuote(int id)
+        //{
+        //    Uri uri = new Uri(string.Format(Constants.ServiceUri, id));
+
+        //    HttpClientHandler insecureHandler = GetInsecureHandler(); //Lokaalia ajoa varten
+        //    HttpClient client = new HttpClient(insecureHandler);
+
+        //    HttpResponseMessage response = await client.DeleteAsync(uri);
+        //    if (response.IsSuccessStatusCode)
+        //    {
+        //        Debug.WriteLine("Kauppaostos poistettu onnistuneesti.");
+        //        await DisplayAlert("Valmis!","Tuote poistettu onnistuneesti!", "Sulje");
+        //        await Navigation.PushAsync(new KauppaostoksetPage(kaupId)); //Mennään takaisin kaupassakävijät sivuu
+        //    }
+        //}
+
 
         async void LoadDataFromRestAPI()
         {
@@ -72,6 +96,7 @@ namespace Kauppa_Appi
 
             }
         }
+
 
         public KauppaostoksetPage(int id)
         {
@@ -126,7 +151,7 @@ namespace Kauppa_Appi
 
 
         }
-
+    
         //ALOITETAAN KAUPPAOSTOKSEN TEKO
         async void startbutton_Clicked(object sender, EventArgs e)
         {
@@ -149,7 +174,7 @@ namespace Kauppa_Appi
                 };
 
                 //Värähdetään kun painetaan aloitetaan kauppareissu
-                var duration = TimeSpan.FromSeconds(1);
+                var duration = TimeSpan.FromSeconds(0.4);
                 Vibration.Vibrate(duration);
 
 #if DEBUG
@@ -201,7 +226,7 @@ namespace Kauppa_Appi
 
             if (ko == null)
             {
-                await DisplayAlert("Valinta puuttuu", "Valitse ostos.", "OK");
+                await DisplayAlert("Valinta puuttuu", "Valitse ensin tuote", "OK");
                 return;
             }
 
@@ -221,7 +246,7 @@ namespace Kauppa_Appi
                 };
 
                 //Värähdetään
-                var duration = TimeSpan.FromSeconds(1);
+                var duration = TimeSpan.FromSeconds(0.2);
                 Vibration.Vibrate(duration);
 #if DEBUG
                 HttpClientHandler insecureHandler = GetInsecureHandler();
@@ -280,7 +305,7 @@ namespace Kauppa_Appi
             {
                 //näytetään "ponnahdusikkunat", joihin käyttäjä syöttää tiedot
                 string tuote = await DisplayPromptAsync("Tuote", "Anna tuote");
-                string kuvaus = await DisplayPromptAsync("Kuvaus", "Kuvaus: ");
+                string kuvaus = await DisplayPromptAsync("Kuvaus", "Anna lisätietoa tuotteesta: ");
 
 
                 KauppaOstokset kauppaostos = new KauppaOstokset()
@@ -344,59 +369,121 @@ namespace Kauppa_Appi
 
         private async void Poistobutton_Clicked(object sender, EventArgs e)
         {
-            KauppaOstokset kop = (KauppaOstokset)koList.SelectedItem;
+            KauppaOstokset ko = (KauppaOstokset)koList.SelectedItem;
 
-            if (kop == null)
+            if (ko == null)
             {
-                await DisplayAlert("Valinta puuttuu", "Valitse poistettava tuote.", "OK");
+                await DisplayAlert("Valinta puuttuu", "Valitse ensin poistettava tuote", "OK");
                 return;
             }
 
             try
-            {              
-                     async Task PoistaTuote(int id)
-                    {
-                        HttpClientHandler insecureHandler = GetInsecureHandler();
-                        HttpClient client = new HttpClient(insecureHandler);
-                        //#else
-                        //HttpClient client = new HttpClient();
-                        //#endif
-                        client.BaseAddress = new Uri(Constants.ServiceUri);
+            {
+                //var poistettavaTuote = (KauppaOstokset)BindingContext;
+                //await PoistaTuote(poistettavaTuote.IdKauppaOstos);
 
-                        // Lähetetään serialisoitu objekti back-endiin Delete -pyyntönä
-                        HttpResponseMessage message = await client.DeleteAsync("/api/kauppaostokset" + id);
 
-                        // Otetaan vastaan palvelimen vastaus
-                        string reply = await message.Content.ReadAsStringAsync();
+                HttpClient client = new HttpClient();
+                koList.SelectedItem= ko.IdKauppaOstos;
+                var id = ko.IdKauppaOstos;
+                var result = await client.DeleteAsync(Constants.ServiceUri + id);
 
-                        //Asetetaan vastaus serialisoituna success boolean muuttujaan (joka on true tai false)
-                        bool success = JsonConvert.DeserializeObject<bool>(reply);
 
-                        if (success == true)
-                        {
-                            await DisplayAlert("Valmis!", "Tuote poistettu onnistuneesti listalta", "Sulje");
-                            await Navigation.PushAsync(new KauppaostoksetPage(kaupId));
+                if (result.IsSuccessStatusCode)  // Jos onnistuu näytetään alert viesti -> success = true
+                {
+                    await DisplayAlert("Valmis!", "Tuote on nyt poistettu onnistuneesti kauppalistalta", "Sulje");
+                    LoadDataFromRestAPI(); //ajaa ylläolevan metodin (lataa sivun tietoineen)
+                }
 
-                        }
-
-                        if (success == false)
-                        {
-                            await DisplayAlert("Ei voida poistaa", "Valitse tuote", "OK");
-                        }
-                        else
-                        {
-                            await DisplayAlert("Virhe", "Virhe palvelimella", "OK");
-                        }
-                    }
-               
+                else
+                {
+                    await DisplayAlert("Virhe", "Virhe palvelimella", "Sulje");
+                }
             }
+
+
             catch (Exception ex)
             {
-
                 string errorMessage = ex.GetType().Name + ": " + ex.Message;
-                
+
             }
         }
 
+        //MUOKKAUS
+
+        private async void Muokkausbutton_Clicked(object sender, EventArgs e)
+        {
+
+            KauppaOstokset ko = (KauppaOstokset)koList.SelectedItem;
+
+            if (ko == null)
+            {
+                await DisplayAlert("Valinta puuttuu", "Valitse tuote ensin", "OK");
+                return;
+            }
+
+            try
+            {
+                string tuote = await DisplayPromptAsync("Tuote", "Anna tuote");
+                string kuvaus = await DisplayPromptAsync("Kuvaus", "Kuvaus: ");
+
+
+                KauppaOstokset kauppaosto = new KauppaOstokset()
+                {
+                    //Käyttäjä syöttää
+                    IdKauppaOstos = (int)koList.SelectedItem,
+                    Title = tuote,
+                    Description = kuvaus,
+
+                    //Tulee automaattisesti
+                    Inprogress = false,
+                    Active = true,
+                    Completed = false,
+                    CreatedAt = DateTime.Now,
+                    LastModifiedAt = DateTime.Now
+                };
+
+                HttpClientHandler insecureHandler = GetInsecureHandler();
+                HttpClient client = new HttpClient(insecureHandler);
+                //#else
+                //HttpClient client = new HttpClient();
+                //#endif
+                //client.BaseAddress = new Uri("https://10.0.2.2:7292/");
+                client.BaseAddress = new Uri(Constants.ServiceUri);
+
+                // Muutetaan em. data objekti Jsoniksi
+                string input = JsonConvert.SerializeObject(kauppaosto);
+                StringContent content = new StringContent(input, Encoding.UTF8, "application/json");
+
+                // Lähetetään serialisoitu objekti back-endiin Post pyyntönä
+                HttpResponseMessage message = await client.PutAsync("/api/kauppaostokset", content);
+
+                // Otetaan vastaan palvelimen vastaus
+                string reply = await message.Content.ReadAsStringAsync();
+
+                //Asetetaan vastaus serialisoituna success boolean muuttujaan (joka on true tai false)
+                bool success = JsonConvert.DeserializeObject<bool>(reply);
+
+                if (success)  // Jos onnistuu näytetään alert viesti -> success = true
+                {
+                    await DisplayAlert("Valmis!", "Tuotetta muokattu onnistuneesti", "Sulje");
+                    LoadDataFromRestAPI(); //ajaa ylläolevan metodin (lataa sivun tietoineen)
+                }
+
+                else
+                {
+                    await DisplayAlert("Virhe", "Virhe palvelimella", "Sulje");
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                string errorMessage = ex.GetType().Name + ": " + ex.Message;
+
+            }
+        }
+
+        
     }
 }
