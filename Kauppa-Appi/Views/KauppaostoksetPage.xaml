@@ -25,7 +25,7 @@
                 Margin="25, 0" SeparatorColor="ForestGreen" BackgroundColor="Azure">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell Text="{Binding Title}" Detail="{Binding Description}" x:Name="koId"/>
+                        <TextCell Text="{Binding Title}" Detail="{Binding Description}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

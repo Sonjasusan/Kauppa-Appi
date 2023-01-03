@@ -11,10 +11,6 @@ using Xamarin.Essentials; //Xamarin essentials -kirjasto
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using RuokaAppiBackend.Models; //<- Käytetään backendistä tuotuja modeleita
-using System.Security.Cryptography.X509Certificates;
-using System.Net.Sockets;
-using System.Net;
-using System.Diagnostics;
 
 namespace Kauppa_Appi
 {
@@ -146,10 +142,7 @@ namespace Kauppa_Appi
                     await DisplayAlert("Virhe", ex.ToString(), "OK");
                 }
             }
-
             LoadDataFromRestAPI();
-
-
         }
     
         //ALOITETAAN KAUPPAOSTOKSEN TEKO
@@ -371,7 +364,7 @@ namespace Kauppa_Appi
         {
             KauppaOstokset ko = (KauppaOstokset)koList.SelectedItem;
 
-            if (ko == null)
+            if (ko == null) //Jos kauppalistalta ei ole valittu mitään - koList.SelectedItem = null
             {
                 await DisplayAlert("Valinta puuttuu", "Valitse ensin poistettava tuote", "OK");
                 return;
@@ -379,22 +372,28 @@ namespace Kauppa_Appi
 
             try
             {
-                //var poistettavaTuote = (KauppaOstokset)BindingContext;
-                //await PoistaTuote(poistettavaTuote.IdKauppaOstos);
+                HttpClientHandler insecureHandler = GetInsecureHandler();
+                HttpClient client = new HttpClient(insecureHandler);
+                client.BaseAddress = new Uri(Constants.ServiceUri);
 
 
-                HttpClient client = new HttpClient();
-                koList.SelectedItem= ko.IdKauppaOstos;
-                var id = ko.IdKauppaOstos;
-                var result = await client.DeleteAsync(Constants.ServiceUri + "/"+id);
+                koList.SelectedItem = ko.IdKauppaOstos; // käyttäjän valisema tuote, josta otetaan id
+                var id = ko.IdKauppaOstos; //id
+                ko.IdKauppaOstos = id;
+                //Uri uri = new Uri(string.Format(Constants.Deleteuri, id));
 
+                //Poistetaan tuote käyttäjän valitsemalla id:llä
+                //HttpResponseMessage result = await client.DeleteAsync(Constants.Deleteuri + id);
+                //HttpResponseMessage response = await client.DeleteAsync(uri);
+
+                HttpResponseMessage result = await client.DeleteAsync($"{Constants.Deleteuri}/{id}");
 
                 if (result.IsSuccessStatusCode)  // Jos onnistuu näytetään alert viesti -> success = true
                 {
                     await DisplayAlert("Valmis!", "Tuote on nyt poistettu onnistuneesti kauppalistalta", "Sulje");
-                    LoadDataFromRestAPI(); //ajaa ylläolevan metodin (lataa sivun tietoineen)
+                    await Navigation.PushAsync(new KauppaostoksetPage(kaupId));
                 }
-
+                
                 else
                 {
                     await DisplayAlert("Virhe", "Virhe palvelimella", "Sulje");

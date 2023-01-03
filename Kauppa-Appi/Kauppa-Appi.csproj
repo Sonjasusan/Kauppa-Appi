@@ -23,7 +23,7 @@
     <EmbeddedResource Update="KauppaostoksetPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="OhjePage.xaml">
+    <EmbeddedResource Update="Views\OhjePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
