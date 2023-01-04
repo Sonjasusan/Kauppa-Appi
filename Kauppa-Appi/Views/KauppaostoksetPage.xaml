@@ -42,9 +42,6 @@
                     <Button x:Name="ostobutton" Text="Merkitse ostetuksi" Clicked="ostobutton_Clicked"></Button>
                     <Button x:Name="poistobutton" Text="Poista" TextColor="Red" Clicked="Poistobutton_Clicked"></Button>
                     <Button x:Name="Muokkausbutton" Text="Muokkaa" TextColor="Green" Clicked="Muokkausbutton_Clicked"></Button>
-
-                    <Button x:Name="navbutton" Text="Takasin" Clicked="navbutton_Clicked"></Button>
-
                 </StackLayout>
             </StackLayout>
             <Frame BackgroundColor="AliceBlue" Padding="16" CornerRadius="0">

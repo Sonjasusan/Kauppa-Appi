@@ -36,26 +36,6 @@ namespace Kauppa_Appi
             return handler;
         }
 
-
-
-
-        //public async Task PoistaTuote(int id)
-        //{
-        //    Uri uri = new Uri(string.Format(Constants.ServiceUri, id));
-
-        //    HttpClientHandler insecureHandler = GetInsecureHandler(); //Lokaalia ajoa varten
-        //    HttpClient client = new HttpClient(insecureHandler);
-
-        //    HttpResponseMessage response = await client.DeleteAsync(uri);
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        Debug.WriteLine("Kauppaostos poistettu onnistuneesti.");
-        //        await DisplayAlert("Valmis!","Tuote poistettu onnistuneesti!", "Sulje");
-        //        await Navigation.PushAsync(new KauppaostoksetPage(kaupId)); //Mennään takaisin kaupassakävijät sivuu
-        //    }
-        //}
-
-
         async void LoadDataFromRestAPI()
         {
 
@@ -283,15 +263,8 @@ namespace Kauppa_Appi
             }
         }
 
-        async void navbutton_Clicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new KaupassakavijatPage()); //Mennään takaisin kaupassakävijät sivuun
-
-
-        }
-
-
         //LISÄTÄÄN KAUPPALISTALLE
+
         private async void Lisaa_Clicked(object sender, EventArgs e)
         {
             try
@@ -420,28 +393,33 @@ namespace Kauppa_Appi
         private async void Muokkausbutton_Clicked(object sender, EventArgs e)
         {
 
-            KauppaOstokset ko = (KauppaOstokset)koList.SelectedItem;
+            KauppaOstokset koip = (KauppaOstokset)koList.SelectedItem; //<- kauppalistalta valittu tuote
 
-            if (ko == null)
+            if (koip == null) //Jos kauppalistalta ei ole valittu tuotetta
             {
+                //Ilmoitetaan käyttäjälle
                 await DisplayAlert("Valinta puuttuu", "Valitse tuote ensin", "OK");
                 return;
             }
+            else //<- kun ollaan valittu listalta muokattava tuote
+            {
+                int id = koip.IdKauppaOstos; //muokattavan tuotteen id on muokattava tuote
+                id = koip.IdKauppaOstos; //muokttavan tuotteen id
+            
 
             try
             {
                 string tuote = await DisplayPromptAsync("Tuote", "Anna tuote");
                 string kuvaus = await DisplayPromptAsync("Kuvaus", "Kuvaus: ");
-
-
-                KauppaOstokset kauppaosto = new KauppaOstokset()
+                    
+                KauppaOstokset muokattavaTuote = new KauppaOstokset() 
                 {
                     //Käyttäjä syöttää
-                    IdKauppaOstos = (int)koList.SelectedItem,
                     Title = tuote,
                     Description = kuvaus,
 
                     //Tulee automaattisesti
+                    IdKauppaOstos = id, //kauppaostoksen id on valitun tuotteen id
                     Inprogress = false,
                     Active = true,
                     Completed = false,
@@ -458,38 +436,34 @@ namespace Kauppa_Appi
                 client.BaseAddress = new Uri(Constants.ServiceUri);
 
                 // Muutetaan em. data objekti Jsoniksi
-                string input = JsonConvert.SerializeObject(kauppaosto);
+                string input = JsonConvert.SerializeObject(muokattavaTuote);
                 StringContent content = new StringContent(input, Encoding.UTF8, "application/json");
-
-                // Lähetetään serialisoitu objekti back-endiin Post pyyntönä
-                HttpResponseMessage message = await client.PutAsync("/api/kauppaostokset", content);
+                
+                //Viedään put pyyntö osoitteella, valitulla id:llä ja syötetyillä tiedoilla
+                HttpResponseMessage message = await client.PutAsync("/api/kauppaostokset/"+ id.ToString(),content);
 
                 // Otetaan vastaan palvelimen vastaus
                 string reply = await message.Content.ReadAsStringAsync();
 
-                //Asetetaan vastaus serialisoituna success boolean muuttujaan (joka on true tai false)
-                bool success = JsonConvert.DeserializeObject<bool>(reply);
 
-                if (success)  // Jos onnistuu näytetään alert viesti -> success = true
+                if (message.IsSuccessStatusCode)  // Jos onnistuu näytetään alert viesti (Http statuskoodi on 200)
                 {
                     await DisplayAlert("Valmis!", "Tuotetta muokattu onnistuneesti", "Sulje");
-                    LoadDataFromRestAPI(); //ajaa ylläolevan metodin (lataa sivun tietoineen)
+                    LoadDataFromRestAPI(); //päivitetään sivu ajamalla LoadDataFromRestApi -metodin (lataa sivun tietoineen uudelleen)
                 }
 
-                else
+                else //Jos epäonnistutaan
                 {
                     await DisplayAlert("Virhe", "Virhe palvelimella", "Sulje");
                 }
-
-
             }
+                
             catch (Exception ex)
             {
                 string errorMessage = ex.GetType().Name + ": " + ex.Message;
+            }
 
             }
-        }
-
-        
+        }       
     }
 }
