@@ -360,51 +360,58 @@ namespace Kauppa_Appi
 
         //POISTO
 
-        private async void Poistobutton_Clicked(object sender, EventArgs e)
+        private async void Poistobutton_Clicked(object sender, EventArgs e) // poisto buttonin avulla
         {
-            KauppaOstokset ko = (KauppaOstokset)koList.SelectedItem;
+            KauppaOstokset koid = (KauppaOstokset)koList.SelectedItem; //kauppalistalta valittu tuote
 
-            if (ko == null) //Jos kauppalistalta ei ole valittu mitään - koList.SelectedItem = null
+            if (koid == null) //Jos kauppalistalta ei ole valittu mitään - koList.SelectedItem = null
             {
+                //Ilmoitetaan käyttäjälle
                 await DisplayAlert("Valinta puuttuu", "Valitse ensin poistettava tuote", "OK");
                 return;
             }
+
+            else //<- kun ollaan valittu poistettava tuote kauppalistalta
+            {
+                int id = koid.IdKauppaOstos; //poistettavan tuotteen id on poistettava tuote
+                id = koid.IdKauppaOstos; //poistettavan tuotteen id
+            
 
             try
             {
                 HttpClientHandler insecureHandler = GetInsecureHandler();
                 HttpClient client = new HttpClient(insecureHandler);
-                client.BaseAddress = new Uri(Constants.ServiceUri);
+                client.BaseAddress = new Uri(Constants.ServiceUri); //Constants:ssa oleva azure backendi osoite
+                   
+
+                string input = JsonConvert.SerializeObject(id); //konvertoidaan jsoniksi
+                StringContent content = new StringContent(input, Encoding.UTF8, "application/json");
+
+                 HttpResponseMessage response = await client.DeleteAsync("/api/kauppaostokset/" +id.ToString()); //poistettavan tuote ja id
+
+                 string reply = await response.Content.ReadAsStringAsync(); //otetaan vastaan http-vastaus
 
 
-                koList.SelectedItem = ko.IdKauppaOstos; // käyttäjän valisema tuote, josta otetaan id
-                var id = ko.IdKauppaOstos; //id
-                ko.IdKauppaOstos = id;
-                //Uri uri = new Uri(string.Format(Constants.Deleteuri, id));
+             if (response.IsSuccessStatusCode)  // Jos onnistuu näytetään alert viesti Http statuskoodi on 200
+             {
+                  await DisplayAlert("Valmis!", "Tuote on nyt poistettu onnistuneesti kauppalistalta", "Sulje");
+                  LoadDataFromRestAPI(); //päivitetään sivu (ladataan uudestaan ajamalla LoadDataFromRestAPI(); -metodi)
+              }
 
-                //Poistetaan tuote käyttäjän valitsemalla id:llä
-                //HttpResponseMessage result = await client.DeleteAsync(Constants.Deleteuri + id);
-                //HttpResponseMessage response = await client.DeleteAsync(uri);
+             //Jos poisto ei onnistu
+             else
+             {
+               await DisplayAlert("Virhe", "Virhe palvelimella", "Sulje"); //ilmoitetaan käyttäjälle virheestä
 
-                HttpResponseMessage result = await client.DeleteAsync($"{Constants.Deleteuri}/{id}");
+              }
 
-                if (result.IsSuccessStatusCode)  // Jos onnistuu näytetään alert viesti -> success = true
-                {
-                    await DisplayAlert("Valmis!", "Tuote on nyt poistettu onnistuneesti kauppalistalta", "Sulje");
-                    await Navigation.PushAsync(new KauppaostoksetPage(kaupId));
-                }
-                
-                else
-                {
-                    await DisplayAlert("Virhe", "Virhe palvelimella", "Sulje");
-                }
-            }
-
-
-            catch (Exception ex)
+              }
+            catch (Exception ex) // Epäonnistutaan
             {
                 string errorMessage = ex.GetType().Name + ": " + ex.Message;
 
+            }
+            
             }
         }
 
