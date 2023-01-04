@@ -9,6 +9,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using System.Diagnostics;
 using RuokaAppiBackend.Models; //<- Käytetään backendistä tuotuja modeleita
+using System.Collections;
 
 namespace Kauppa_Appi
 {
@@ -167,8 +168,6 @@ namespace Kauppa_Appi
                 {
                     //näytetään alert viesti käyttäjälle kaupassakävijän lisäyksen onnistumisesta
                     await DisplayAlert("Valmis!", "Kaupassakävijä tallennettu onnistuneesti!", "Sulje"); 
-
-
                     await Navigation.PushAsync(new KaupassakavijatPage()); //Päivitetään sivu uudelleen
 
                 }
@@ -190,24 +189,131 @@ namespace Kauppa_Appi
         }
 
         //POISTETAAN KAUPASSAKÄVIJÄ
-        private void Poista_Clicked(object sender, EventArgs e)
+        private async void Poista_Clicked(object sender, EventArgs e)
         {
-            //tähän tulee poisto
+            Kaupassakavijat kaid = (Kaupassakavijat)kaList.SelectedItem; //Valitaan poistettava kaupassakävijä
+
+            if (kaid == null) //Jos valintaa ei ole
+            {
+                //Ilmoitetaan käyttäjälle
+                await DisplayAlert("Valinta puuttuu!", "Valitse ensin poistettava kaupassakävijä", "OK");
+                return;
+            }
+            else //<- ollaan valittu poistettava kaupassakävijä
+            {
+                int id = kaid.IdKavija; //poistettavan kaupassakävijän id on poistettava kaupassakävijä
+                id = kaid.IdKavija; //poistettavan kaupassakävijän id
+           
+
             try
             {
+                    HttpClientHandler insecureHandler = GetInsecureHandler();
+                    HttpClient client = new HttpClient(insecureHandler);
+                    client.BaseAddress = new Uri(Constants.ServiceUri); //Constants:ssa oleva azure backendi osoite
+
+
+                    string input = JsonConvert.SerializeObject(id); //konvertoidaan jsoniksi
+                    StringContent content = new StringContent(input, Encoding.UTF8, "application/json");
+
+                    //Viedään delete pyyntö osoitteella,ja valitulla id:llä
+                    HttpResponseMessage response = await client.DeleteAsync("/api/kaupassakavijat/" +id); //poistettava kaupassakävijä ja id
+
+                    string reply = await response.Content.ReadAsStringAsync(); //otetaan vastaan http-vastaus
+
+
+                    if (response.IsSuccessStatusCode)  // Jos onnistuu näytetään alert viesti (Http statuskoodi on 200)
+                    {
+                        await DisplayAlert("Valmis!", "Kaupassakävijä on nyt poistettu onnistuneesti kaupassakävijät -listalta", "Sulje");
+                        await Navigation.PushAsync(new KaupassakavijatPage()); //Päivitetään sivu uudelleen
+
+                    }
+
+                    //Jos poisto ei onnistu
+                    else
+                    {
+                        //kaupassakävijöitä, joilla on "dataa" ei voida poistaa
+                        await DisplayAlert("Virhe", "Tätä kaupassakävijää ei voida poistaa.", "Sulje"); //ilmoitetaan käyttäjälle virheestä
+
+                    }
+
+                }
+
+            catch (Exception ex)
+            {
+              string errorMessage = ex.GetType().Name + ": " + ex.Message;
 
             }
-            catch (Exception)
-            {
 
-                throw;
+
             }
         }
 
         //MUOKATAAN KAUPASSAKÄVIJÄÄ
-        private void Muokkaa_Clicked(object sender, EventArgs e)
+
+        private async void Muokkaa_Clicked(object sender, EventArgs e)
         {
-            //tähän tulee muokkaus
+            Kaupassakavijat ka = (Kaupassakavijat)kaList.SelectedItem; //Valitaan muokattava kaupassakävijä
+
+            if (ka == null) //Jos valintaa ei ole
+            {
+                await DisplayAlert("Valinta puuttuu", "Valitse ensin muokattava kaupassakävijä", "OK");
+                return;
+            }
+            else
+            {
+                int id = ka.IdKavija; //muokattavan kaupassakävijän id on muokattava kaupassakävijä
+                id = ka.IdKavija; //muokattavan kaupassakävijän id
+
+                try
+                {
+                    string nimi = await DisplayPromptAsync("Nimi", "Anna kaupassakävijän nimi");
+
+                    Kaupassakavijat muokattavaKavija = new Kaupassakavijat()
+                    {
+                        //Käyttäjä syöttää
+                        Nimi = nimi,
+
+                        //Tulee automaattisesti
+                        IdKavija = id, //kaupassakävijän id on valittu kaupassakävijä
+                        Active = true,
+                        CreatedAt = DateTime.Now
+                    };
+
+                    HttpClientHandler insecureHandler = GetInsecureHandler();
+                    HttpClient client = new HttpClient(insecureHandler);
+                    //#else
+                    //HttpClient client = new HttpClient();
+                    //#endif
+                    //client.BaseAddress = new Uri("https://10.0.2.2:7292/");
+                    client.BaseAddress = new Uri(Constants.ServiceUri);
+
+                    // Muutetaan em. data objekti Jsoniksi
+                    string input = JsonConvert.SerializeObject(muokattavaKavija);
+                    StringContent content = new StringContent(input, Encoding.UTF8, "application/json");
+
+                    //Viedään put pyyntö osoitteella, valitulla id:llä ja syötetyillä tiedoilla
+                    HttpResponseMessage message = await client.PutAsync("/api/kaupassakavijat/" + id.ToString(), content);
+
+                    // Otetaan vastaan palvelimen vastaus
+                    string reply = await message.Content.ReadAsStringAsync();
+
+
+                    if (message.IsSuccessStatusCode)  // Jos onnistuu näytetään alert viesti (Http statuskoodi on 200)
+                    {
+                        await DisplayAlert("Valmis!", "Kaupassakävijää muokattu onnistuneesti", "Sulje");
+                        await Navigation.PushAsync(new KaupassakavijatPage()); //Päivitetään sivu
+                    }
+
+                    else //Jos epäonnistutaan
+                    {
+                        await DisplayAlert("Virhe", "Virhe palvelimella", "Sulje");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string errorMessage = ex.GetType().Name + ": " + ex.Message;
+                }
+            }
         }
 
         //OHJESIVULLE
