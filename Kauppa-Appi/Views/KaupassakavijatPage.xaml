@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Kauppa_Appi.KaupassakavijatPage">
+        <StackLayout>
+            <Frame BackgroundColor="AliceBlue" Padding="16">
+                <Label Text="KauppaAppi"
+               FontSize="28"
+               FontAttributes="Bold"
+               TextColor="Blue"
+               HorizontalTextAlignment="Center"
+               FontFamily="Arial"
+               HorizontalOptions="CenterAndExpand"/>
+            </Frame>
+            <Button x:Name="lisaa" Text="Lisää kaupassakävijä" TextColor="Black" Clicked="Lisaa_Clicked"></Button>
+        <Button x:Name="ohjeisiin" Text="Ohje" TextColor="blue" BackgroundColor="AliceBlue" BorderColor="Blue"
+                    Clicked="Ohjeisiin_Clicked"></Button>
+
+
+            <!-- Hakukenttä -->
+            <SearchBar BackgroundColor="White" Placeholder="Hae"
+                   SearchButtonPressed="OnSearchBarButtonPressed" TextChanged="OnTextChanged" CancelButtonColor="Red"/>
+
+            <Frame BackgroundColor="Azure" Padding="12" CornerRadius="0">
+                <Label Text="Valitse kaupassakävijä"
+                   FontSize="18"
+                   FontAttributes="Italic"
+                   TextColor="DarkBlue"
+                   HorizontalOptions="Center"></Label>
+            </Frame>
+
+            <Label x:Name="kavija_lataus" />
+
+        <ListView x:Name="kaList" SelectionMode="Single" Margin="20, 0">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <ContentView Padding="3">
+                            <Frame BorderColor="Silver" Padding="3">
+
+                                <StackLayout BackgroundColor="Azure" Orientation="Horizontal" Padding="0, 2">
+
+                                    <Label Text= "{Binding Nimi}"
+                                              HorizontalOptions="Center"
+                                                TextColor="DarkBlue"
+                                               FontSize="22"
+                                               VerticalOptions="StartAndExpand" />
+                                </StackLayout>
+                            </Frame>
+                        </ContentView>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+            
+        <StackLayout Orientation="Horizontal">
+        <Button x:Name="muokkaa" Text="Muokkaa" TextColor="Green" FontSize="Small" Clicked="Muokkaa_Clicked"></Button>
+        <Button x:Name="poista" Text="Poista" TextColor="Red" FontSize="Small" Clicked="Poista_Clicked"></Button>
+            <Button x:Name="navbutton" Text="Kauppaostoslistaan" Clicked="navbutton_Clicked"></Button>
+        </StackLayout>
+
+
+            <Frame BackgroundColor="AliceBlue" Padding="16" CornerRadius="0">
+                <Label Text="♥ made by Sonja" HorizontalTextAlignment="Center" TextColor="Gray" FontSize="14"/>
+            </Frame>
+
+        </StackLayout>
+</ContentPage>

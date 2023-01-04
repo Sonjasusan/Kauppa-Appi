@@ -16,7 +16,7 @@
                HorizontalTextAlignment="Center"
                TextColor="Black"/>
 
-        <Button x:Name="navbutton" Text="Aloita Kauppa-Apin käyttö" Clicked="navbutton_Clicked">
+        <Button x:Name="kaupassakavijatsivulle" Text="Aloita Kauppa-Apin käyttö" Clicked="kaupassakavijatsivulle_Clicked">
         </Button>
 
 

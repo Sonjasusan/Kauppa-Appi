@@ -16,10 +16,9 @@ namespace Kauppa_Appi
             InitializeComponent();
         }
 
-        private void navbutton_Clicked(object sender, EventArgs e)
+        private void kaupassakavijatsivulle_Clicked(object sender, EventArgs e)
         {
-           //Navigation.PushAsync(new KaupassakavijatPage()); //Navigoidaan Kaupassakävijät sivulle
-
+            Navigation.PushAsync(new KaupassakavijatPage()); //Navigoidaan Kaupassakävijät sivulle
         }
     }
 }

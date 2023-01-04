@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Kauppa_Appi.OhjePage">
+    <ContentPage.Content>
+        <StackLayout>
+            <Label Text="Tervetuloa käyttämään Kauppa-Appia, tältä sivulta löydät käyttö-ohjeet!"
+                VerticalOptions="CenterAndExpand" 
+                HorizontalOptions="CenterAndExpand" />
+            <StackLayout>
+                <Label Text="Kaupassakävijät sivulla voit luoda kaupassakävijän tarpeesi mukaan." TextColor="blue"></Label>
+                <Label Text="Kun olet luonut kaupassakävijän pääset navigoimaan kauppaostokset sivulle valitsemalla ensin kaupassakävijän."></Label>
+            </StackLayout>
+
+            <StackLayout>
+                <Label Text="Versio 1.2"></Label>
+            </StackLayout>
+
+            
+            <Button x:Name="kaupassakavijoihin" Text="Kaupassakavijöihin" Clicked="kaupassakavijoihin_Clicked"></Button>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
