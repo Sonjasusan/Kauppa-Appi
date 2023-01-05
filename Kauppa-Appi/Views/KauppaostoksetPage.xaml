@@ -1,18 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Kauppa_Appi.KauppaostoksetPage">
+             x:Class="Kauppa_Appi.KauppaostoksetPage"
+             Title="Kauppa-Appi - Kauppaostokset">
     <ContentPage.Content>
         <StackLayout>
             <Frame BackgroundColor="AliceBlue" Padding="16">
-                <Label Text="KauppaAppi"
+                <Label Text="Kauppa-Appi"
                FontSize="28"
                FontAttributes="Bold"
                TextColor="Blue"
                HorizontalTextAlignment="Center"
-               FontFamily="Arial"
                HorizontalOptions="CenterAndExpand"/>
             </Frame>
+            <ImageButton Source="info.png"
+                         BackgroundColor="Transparent"
+                         WidthRequest="35"
+                         HeightRequest="35"
+                         HorizontalOptions="End"
+                         VerticalOptions="EndAndExpand"
+                         Aspect="AspectFit"
+                         Clicked="ImageButton_Clicked"/>
+
 
             <Button x:Name="startbutton" Text="Merkitse tuote ostettavaksi" Clicked="startbutton_Clicked"></Button>
             <Button x:Name="Lisaa" Text="Lisää tuotteita kauppalistalle" Clicked="Lisaa_Clicked"/>
@@ -22,10 +31,11 @@
             <!--Kauppaostoslistaus-->
 
             <ListView x:Name="koList" SelectionMode="Single"
-                Margin="25, 0" SeparatorColor="ForestGreen" BackgroundColor="Azure">
+                Margin="25, 0" BackgroundColor="Azure">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell Text="{Binding Title}" Detail="{Binding Description}"/>
+                        <TextCell Text="{Binding Title}" Detail="{Binding Description}" TextColor="DarkBlue"/>
+                        
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

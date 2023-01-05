@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Kauppa_Appi.KaupassakavijatPage">
+             x:Class="Kauppa_Appi.KaupassakavijatPage"
+             Title="Kauppa-Appi - Kaupassakävijät">
         <StackLayout>
             <Frame BackgroundColor="AliceBlue" Padding="16">
                 <Label Text="KauppaAppi"
@@ -18,13 +19,12 @@
 
 
             <!-- Hakukenttä -->
-            <SearchBar BackgroundColor="White" Placeholder="Hae"
+            <SearchBar BackgroundColor="White" Placeholder="Hae kaupassakävijää"
                    SearchButtonPressed="OnSearchBarButtonPressed" TextChanged="OnTextChanged" CancelButtonColor="Red"/>
 
             <Frame BackgroundColor="Azure" Padding="12" CornerRadius="0">
                 <Label Text="Valitse kaupassakävijä"
                    FontSize="18"
-                   FontAttributes="Italic"
                    TextColor="DarkBlue"
                    HorizontalOptions="Center"></Label>
             </Frame>
