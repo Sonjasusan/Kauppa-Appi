@@ -29,31 +29,28 @@
             <Label x:Name="ko_lataus" />
             
             <!--Kauppaostoslistaus-->
-
             <ListView x:Name="koList" SelectionMode="Single"
                 Margin="25, 0" BackgroundColor="Azure">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextCell Text="{Binding Title}" Detail="{Binding Description}" TextColor="DarkBlue"/>
-                        
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
 
-
+            <!--Sijainti-->
             <Label x:Name="lat_label"></Label>
             <Label x:Name="lon_label"></Label>
 
             <StackLayout Orientation="Horizontal">
 
                 <StackLayout Orientation="Horizontal">
-
-
                     <Button x:Name="ostobutton" Text="Merkitse ostetuksi" Clicked="ostobutton_Clicked"></Button>
                     <Button x:Name="poistobutton" Text="Poista" TextColor="Red" Clicked="Poistobutton_Clicked"></Button>
                     <Button x:Name="Muokkausbutton" Text="Muokkaa" TextColor="Green" Clicked="Muokkausbutton_Clicked"></Button>
                 </StackLayout>
             </StackLayout>
+            
             <Frame BackgroundColor="AliceBlue" Padding="16" CornerRadius="0">
                 <Label Text="♥ made by Sonja" HorizontalTextAlignment="Center" TextColor="Gray" FontSize="14"/>
             </Frame>

@@ -90,34 +90,36 @@ namespace Kauppa_Appi
             {
                 try
                 {
-                    var request = new GeolocationRequest(GeolocationAccuracy.Medium, TimeSpan.FromSeconds(10));
+                    //Haetaan sijainti parhaalla vastaavuudella
+                    var request = new GeolocationRequest(GeolocationAccuracy.Best, TimeSpan.FromSeconds(10));
 
                     var location = await Geolocation.GetLocationAsync(request);
 
-                    if (location != null)
+                    if (location != null) //jos sijainti ei ole null (löytyy sijainti)
                     {
 
-                        lon_label.Text = $"Longitude: " + location.Longitude;
-                        lat_label.Text = $"Latitude: {location.Latitude}";
+                        lon_label.Text = $"Longitude: " + location.Longitude; //longitude teksti
+                        lat_label.Text = $"Latitude: {location.Latitude}"; //latitude teksti
 
-                        lat = location.Latitude.ToString();
+                        //muunnetaan molemmat string-muotoon
+                        lat = location.Latitude.ToString(); 
                         lon = location.Longitude.ToString();
 
                     }
                 }
-                catch (FeatureNotSupportedException fnsEx)
+                catch (FeatureNotSupportedException fnsEx) //jos ominaisuus ei ole tuettu (on vaikka niin vanha laite ettei toimi)
                 {
                     await DisplayAlert("Virhe", fnsEx.ToString(), "OK");
                 }
-                catch (FeatureNotEnabledException fneEx)
+                catch (FeatureNotEnabledException fneEx) //jos sijainti toimintoa ei olla hyväksytty
                 {
                     await DisplayAlert("Virhe", fneEx.ToString(), "OK");
                 }
-                catch (PermissionException pEx)
+                catch (PermissionException pEx) //jos sijainnin anto lupaa ei olla annettu
                 {
                     await DisplayAlert("Virhe", pEx.ToString(), "OK");
                 }
-                catch (Exception ex)
+                catch (Exception ex) //jokin muu virhe
                 {
                     await DisplayAlert("Virhe", ex.ToString(), "OK");
                 }
@@ -125,30 +127,33 @@ namespace Kauppa_Appi
             LoadDataFromRestAPI();
         }
     
-        //ALOITETAAN KAUPPAOSTOKSEN TEKO
+        //ALOITETAAN KAUPPAOSTOKSEN TEKO (merkataan tuote ostettavaksi)
         async void startbutton_Clicked(object sender, EventArgs e)
         {
-            KauppaOstokset ko = (KauppaOstokset)koList.SelectedItem;
-            if (ko == null)
+            KauppaOstokset ko = (KauppaOstokset)koList.SelectedItem; //kauppaostos listalta valittu ostos
+            if (ko == null) //jos ei olla valittu mitään
             {
-                await DisplayAlert("Valinta puuttuu", "Valitse tuote", "OK");
-                return;
+                await DisplayAlert("Valinta puuttuu", "Valitse tuote", "OK"); //ilmoitetaan käyttäjälle että täytyy valita ensin
+                return; //palataan samalle sivulle
             }
             try
             {
+                //Kirjataan uusi tapahtuma hyödyntäen "KauppaOperations" -luokkaa
                 KauppaOperation kop = new KauppaOperation()
                 {
-                    KavijaID = kaupId,
-                    KauppaOstosID = ko.IdKauppaOstos,
-                    OperationType = "start",
-                    Latitude = lat,
-                    Longitude = lon,
-                    Comment = "Aloitettu"
+                    KavijaID = kaupId, //kaupassakävijän id
+                    KauppaOstosID = ko.IdKauppaOstos, //kauppaostoksen (tuotteen) id
+                    OperationType = "start", //tapahtuman tyyppi = aloitus 
+                    
+                    //sijainnit sillä hetkellä kun aloitetaan ostostenteko -latitude & longitude
+                    Latitude = lat, 
+                    Longitude = lon, 
+                    Comment = "Aloitettu" //lähetetään automaattinen kommentti aloituksen mukana (käyttäjän ei tarvitse täyttää)
                 };
 
-                //Värähdetään kun painetaan aloitetaan kauppareissu
-                var duration = TimeSpan.FromSeconds(0.4);
-                Vibration.Vibrate(duration);
+                //Värähdetään kun valitaan tuote ostettavaksi
+                var duration = TimeSpan.FromSeconds(0.4); //värähdyksen kesto
+                Vibration.Vibrate(duration); //värähdys
 
 #if DEBUG
                 HttpClientHandler insecureHandler = GetInsecureHandler(); //Lokaalia ajoa varten
@@ -172,21 +177,22 @@ namespace Kauppa_Appi
                 string reply = await message.Content.ReadAsStringAsync();
 
                 //Asetetaan vastaus serialisoituna success muuttujaan
-                bool success = JsonConvert.DeserializeObject<bool>(reply);
+                bool success = JsonConvert.DeserializeObject<bool>(reply); //success tässä tapauksessa kun tuote onnistutaan merkkaamaan ostettavaksi
 
-                //Muokataan
+                //Kun käyttäjä yrittää valita tuotetta ostettavaksi, joka on jo aiemmin merkitty
                 if (success == false)
                 {
-                    await DisplayAlert("Ei voida aloittaa", "Tuote on jo merkattu", "OK"); //Tämä kohta korvataan (ei toimi tässä)
+                    await DisplayAlert("Ei voida aloittaa", "Tuote on jo merkitty", "OK"); //Ilmoitetaan käyttäjälle että tuote on jo merkitty
                 }
-                //Muokataan
+
+                //Kun käyttäjä valitsee tuotteen ostettavaksi (klikkaa "merkitse tuote ostettavaksi" -nappia
                 else if (success == true)
                 {
-                    await DisplayAlert("Kauppareissu aloitettu", "Kauppareissu on aloitettu", "OK"); //Tarkoituksena että tätä tarvitsee  vain kerran
+                    await DisplayAlert("Tuote merkitty ostettavaksi, ostotapahtuma aloitettu", "Ostotapahtuma on nyt aloitettu, muista merkitä sama tuote ostetuksi kun se on ostettu.", "OK"); //Ilmoitus käyttäjälle
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception ex) //tapahtuu virhe
             {
                 await DisplayAlert(ex.GetType().Name, ex.Message, "OK");
             }
@@ -195,32 +201,35 @@ namespace Kauppa_Appi
         //MERKITÄÄN OSTETUKSI
         async void ostobutton_Clicked(object sender, EventArgs e)
         {
-            KauppaOstokset ko = (KauppaOstokset)koList.SelectedItem;
+            KauppaOstokset ko = (KauppaOstokset)koList.SelectedItem; //kauppaostoslistalta valittu tuote
 
-            if (ko == null)
+            if (ko == null) //valittua tuotetta ei ole
             {
-                await DisplayAlert("Valinta puuttuu", "Valitse ensin tuote", "OK");
-                return;
+                await DisplayAlert("Valinta puuttuu", "Valitse ensin tuote", "OK"); //ilmoitus käyttäjälle
+                return; //palataan samalle sivulle
             }
 
-            string result = await DisplayPromptAsync("Kommentti", "Kirjoita kommentti ostosreissusta");
+            //Kun tuotteen merkitseminen ostetuksi onnistuu, käyttäjää pyydetään antamaan kommentti
+            string result = await DisplayPromptAsync("Kommentti", "Kirjoita vapaaehtoinen kommentti ostosreissusta");
 
             try
             {
-
+                //uusi tapahtuma KauppaOperations -luokkaa hyödyntäen
                 KauppaOperation op = new KauppaOperation
                 {
-                    KavijaID = kaupId,
-                    KauppaOstosID = ko.IdKauppaOstos,
-                    OperationType = "ready",
-                    Comment = result,
+                    KavijaID = kaupId, //kaupassakävijän id
+                    KauppaOstosID = ko.IdKauppaOstos, //kauppaostoksen id
+                    OperationType = "ready", //tapahtuman tyyppi - nyt ready, koska viimeinen tapahtuma kauppaostosten teossa
+                    Comment = result, //kommentti, jonka käyttäjä on kirjoittanut (voi olla myös null)
+                    
+                    //Sijainti sillä hetkellä kun tuote on ostettu
                     Latitude = lat,
                     Longitude = lon
                 };
 
-                //Värähdetään
-                var duration = TimeSpan.FromSeconds(0.2);
-                Vibration.Vibrate(duration);
+                //Värähdetään merkiksi
+                var duration = TimeSpan.FromSeconds(0.2); //värähdyken kesto
+                Vibration.Vibrate(duration); //värähdys
 #if DEBUG
                 HttpClientHandler insecureHandler = GetInsecureHandler();
                 HttpClient client = new HttpClient(insecureHandler);
@@ -241,23 +250,24 @@ namespace Kauppa_Appi
                 // Otetaan vastaan palvelimen vastaus
                 string reply = await message.Content.ReadAsStringAsync();
 
-                //Asetetaan vastaus serialisoituna success muuttujaan
+                //Asetetaan vastaus serialisoituna success muuttujaan, tässä tapauksessa success = kun tuote onnistutaan merkkaamaan ostetuksi
                 bool success = JsonConvert.DeserializeObject<bool>(reply);
 
-                if (success == false)
+                if (success == false) //Kun käyttäjä ei ole valinnut merkittävää tuotetta
                 {
-                    await DisplayAlert("Ei voida lopettaa", "Valitse tuote", "OK");
+                    await DisplayAlert("Ei voida merkitä ostetuksi", "Valitse ensin tuote tai tarkista että olet merkinnyt tuotteen ostettavaksi", "OK"); //ilmoitus käyttäjälle
                 }
 
-                if (success == true)
+                if (success == true) //onnistutaan merkitsemään tuote ostetuksi
                 {
-                    await DisplayAlert("Tuote ostettu", "Tuote on merkattu ostetuksi", "OK");
+                    await DisplayAlert("Tuote ostettu", "Tuote on nyt merkitty ostetuksi", "OK"); //ilmoitus käyttäjälle
 
-                    await Navigation.PushAsync(new KauppaostoksetPage(kaupId));
+                    //ladataan sivu uudelleen niin että ostetut tuotteet ovat poistuneet listalta
+                    await Navigation.PushAsync(new KauppaostoksetPage(kaupId)); 
                 }
 
             }
-            catch (Exception ex)
+            catch (Exception ex) //tapahtuu virhe (joka ei ole mikään yllä olevista)
             {
                 await DisplayAlert(ex.GetType().Name, ex.Message, "OK");
             }
@@ -265,7 +275,7 @@ namespace Kauppa_Appi
 
         //LISÄTÄÄN KAUPPALISTALLE
 
-        private async void Lisaa_Clicked(object sender, EventArgs e)
+        private async void Lisaa_Clicked(object sender, EventArgs e) // <- Lisää buttoni
         {
             try
             {
@@ -276,16 +286,14 @@ namespace Kauppa_Appi
 
                 KauppaOstokset kauppaostos = new KauppaOstokset()
                 {
-                    //IdKauppaOstos = kaupId,
-
                     //Käyttäjä syöttää
                     Title = tuote,
                     Description = kuvaus,
 
                     //Tulee automaattisesti
-                    Inprogress = false,
+                    Inprogress = false, //false -> uusi tuote
                     Active = true,
-                    Completed = false,
+                    Completed = false, // false -> uusi tuote
                     CreatedAt = DateTime.Now,
                     LastModifiedAt = DateTime.Now
                 };
@@ -309,7 +317,7 @@ namespace Kauppa_Appi
                 string reply = await message.Content.ReadAsStringAsync();
 
                 //Asetetaan vastaus serialisoituna success boolean muuttujaan (joka on true tai false)
-                bool success = JsonConvert.DeserializeObject<bool>(reply);
+                bool success = JsonConvert.DeserializeObject<bool>(reply); //tässä tapauksessa success jos lisäys onnistuu
 
                 if (success)  // Jos onnistuu näytetään alert viesti -> success = true
                 {
@@ -317,7 +325,7 @@ namespace Kauppa_Appi
                     LoadDataFromRestAPI(); //ajaa ylläolevan metodin (lataa sivun tietoineen)
                 }
 
-                else
+                else //kun lisäys ei onnistu
                 {
                     await DisplayAlert("Virhe", "Virhe palvelimella", "Sulje");
                 }
@@ -333,7 +341,7 @@ namespace Kauppa_Appi
 
         //POISTO
 
-        private async void Poistobutton_Clicked(object sender, EventArgs e) // poisto buttonin avulla
+        private async void Poistobutton_Clicked(object sender, EventArgs e) // <- poisto buttonin avulla
         {
             KauppaOstokset koid = (KauppaOstokset)koList.SelectedItem; //kauppalistalta valittu tuote
 
@@ -341,12 +349,12 @@ namespace Kauppa_Appi
             {
                 //Ilmoitetaan käyttäjälle
                 await DisplayAlert("Valinta puuttuu", "Valitse ensin poistettava tuote", "OK");
-                return;
+                return; //palataan samalle sivulle
             }
 
             else //<- kun ollaan valittu poistettava tuote kauppalistalta
             {
-                int id = koid.IdKauppaOstos; //poistettavan tuotteen id on poistettava tuote
+                int id = koid.IdKauppaOstos; //valitun tuotteen id on poistettava tuote
                 id = koid.IdKauppaOstos; //poistettavan tuotteen id
             
 
@@ -365,7 +373,7 @@ namespace Kauppa_Appi
                  string reply = await response.Content.ReadAsStringAsync(); //otetaan vastaan http-vastaus
 
 
-             if (response.IsSuccessStatusCode)  // Jos onnistuu näytetään alert viesti Http statuskoodi on 200
+             if (response.IsSuccessStatusCode)  // Jos onnistuu näytetään alert viesti -> Http statuskoodi on 200
              {
                   await DisplayAlert("Valmis!", "Tuote on nyt poistettu onnistuneesti kauppalistalta", "Sulje");
                   LoadDataFromRestAPI(); //päivitetään sivu (ladataan uudestaan ajamalla LoadDataFromRestAPI(); -metodi)
@@ -379,7 +387,7 @@ namespace Kauppa_Appi
               }
 
               }
-            catch (Exception ex) // Epäonnistutaan
+            catch (Exception ex) // Epäonnistutaan muusta kuin ylläolevista vaihtoehdoista johtuvasta syystä
             {
                 string errorMessage = ex.GetType().Name + ": " + ex.Message;
 
@@ -390,7 +398,7 @@ namespace Kauppa_Appi
 
         //MUOKKAUS
 
-        private async void Muokkausbutton_Clicked(object sender, EventArgs e)
+        private async void Muokkausbutton_Clicked(object sender, EventArgs e) // <- muokkaus button
         {
 
             KauppaOstokset koip = (KauppaOstokset)koList.SelectedItem; //<- kauppalistalta valittu tuote
@@ -399,18 +407,18 @@ namespace Kauppa_Appi
             {
                 //Ilmoitetaan käyttäjälle
                 await DisplayAlert("Valinta puuttuu", "Valitse tuote ensin", "OK");
-                return;
+                return; //palataan samalle sivulle
             }
             else //<- kun ollaan valittu listalta muokattava tuote
             {
-                int id = koip.IdKauppaOstos; //muokattavan tuotteen id on muokattava tuote
-                id = koip.IdKauppaOstos; //muokttavan tuotteen id
+                int id = koip.IdKauppaOstos; //valitun tuotteen id on muokattava tuote
+                id = koip.IdKauppaOstos; //muokattavan tuotteen id
             
 
             try
             {
                 string tuote = await DisplayPromptAsync("Tuote", "Anna tuote");
-                string kuvaus = await DisplayPromptAsync("Kuvaus", "Kuvaus: ");
+                string kuvaus = await DisplayPromptAsync("Kuvaus", "Anna lisätietoa tuotteesta: ");
                     
                 KauppaOstokset muokattavaTuote = new KauppaOstokset() 
                 {
@@ -466,9 +474,9 @@ namespace Kauppa_Appi
             }
         }
 
-        private void ImageButton_Clicked(object sender, EventArgs e)
+        private void ImageButton_Clicked(object sender, EventArgs e) //info kuva -buttoni
         {
-            Navigation.PushAsync(new OhjePage()); //Navigoidaan Kaupassakävijät sivulle
+            Navigation.PushAsync(new OhjePage()); //Navigoidaan ohje-sivulle
 
         }
     }

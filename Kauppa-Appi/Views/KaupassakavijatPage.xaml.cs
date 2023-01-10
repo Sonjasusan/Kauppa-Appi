@@ -66,8 +66,7 @@ namespace Kauppa_Appi
                     string json = await client.GetStringAsync("api/kaupassakavijat");
 
                     IEnumerable<Kaupassakavijat> kaupassakavijat = JsonConvert.DeserializeObject<Kaupassakavijat[]>(json);
-                    // dataa -niminen observableCollection on alustettukin jo ylhäällä päätasolla että hakutoiminto,
-                    // pääsee siihen käsiksi.
+                    
                     // asetetaan sen sisältö ensi kerran tässä pienellä kepulikonstilla:
                     ObservableCollection<Kaupassakavijat> dataa2 = new ObservableCollection<Kaupassakavijat>(kaupassakavijat);
                     dataa = dataa2;
@@ -96,7 +95,7 @@ namespace Kauppa_Appi
             string searchText = searchBar.Text;
             searchBar.TextChanged += OnTextChanged; //teksti muuttuu
 
-            //Jos nimi sisältää pienen tai ison kirjaimen
+            //Haetaan (jos kaupassakävijässä on esim "i"-kirjain, näytetään kaikki kaupassakävijät, joiden nimiin sisätyy i-kirjain
             kaList.ItemsSource = dataa.Where(x => x.Nimi.ToLower().Contains(searchText.ToLower()));
         }
 
@@ -113,15 +112,15 @@ namespace Kauppa_Appi
             Kaupassakavijat kaup = (Kaupassakavijat)kaList.SelectedItem;
             if (kaup == null) //jos kaupassakävijää ei olla valittu - eli ei ole id:tä
             {
-                await DisplayAlert("Valinta puuttuu", "Valitse kaupassakävijä jatkaaksesi!", "OK");
+                await DisplayAlert("Valinta puuttuu", "Valitse kaupassakävijä jatkaaksesi!", "OK"); //ilmoitus käyttäjälle
                 return;
             }
 
             else
             {
-                int kaupId = kaup.IdKavija;
+                int kaupId = kaup.IdKavija; //kaupId = valitun kaupassakävijän id
                 await Navigation.PushAsync(new KauppaostoksetPage(kaupId)); //Navigoidaan KauppaOstoksetPagelle
-                                                                            //kaupId = valitun kaupassakävijän id
+                                                                           //kaupId = valitun kaupassakävijän id
             }
         }
 
@@ -130,15 +129,17 @@ namespace Kauppa_Appi
         {
             try
             {
+                //Käyttäjä syöttää kaupassakävijän nimen
                 string nimi = await DisplayPromptAsync("Nimi", "Anna kaupassakävijän nimi (etunimi riittää)");
 
+                //Uuden kaupassakävijän lisäys
                 Kaupassakavijat kavija = new Kaupassakavijat()
                 {
                     //Käyttäjä syöttää
                     Nimi = nimi,
 
                     //Tulee automaattisesti
-                    Active = true,
+                    Active = true,// -> true - uusi kaupassakävijä
                     CreatedAt = DateTime.Now
                 };
 
@@ -185,11 +186,10 @@ namespace Kauppa_Appi
                 string errorMessage = ex.GetType().Name + ": " + ex.Message;
 
             }
-
         }
 
         //POISTETAAN KAUPASSAKÄVIJÄ
-        private async void Poista_Clicked(object sender, EventArgs e)
+        private async void Poista_Clicked(object sender, EventArgs e) // <- poista nappi
         {
             Kaupassakavijat kaid = (Kaupassakavijat)kaList.SelectedItem; //Valitaan poistettava kaupassakävijä
 
@@ -201,7 +201,7 @@ namespace Kauppa_Appi
             }
             else //<- ollaan valittu poistettava kaupassakävijä
             {
-                int id = kaid.IdKavija; //poistettavan kaupassakävijän id on poistettava kaupassakävijä
+                int id = kaid.IdKavija; //valitun kaupassakävijän id on poistettava kaupassakävijä
                 id = kaid.IdKavija; //poistettavan kaupassakävijän id
            
 
@@ -250,14 +250,14 @@ namespace Kauppa_Appi
 
         //MUOKATAAN KAUPASSAKÄVIJÄÄ
 
-        private async void Muokkaa_Clicked(object sender, EventArgs e)
+        private async void Muokkaa_Clicked(object sender, EventArgs e) // <- muokkaus nappi
         {
             Kaupassakavijat ka = (Kaupassakavijat)kaList.SelectedItem; //Valitaan muokattava kaupassakävijä
 
             if (ka == null) //Jos valintaa ei ole
             {
                 await DisplayAlert("Valinta puuttuu", "Valitse ensin muokattava kaupassakävijä", "OK");
-                return;
+                return; //palataan samalle sivulle
             }
             else
             {
@@ -317,9 +317,9 @@ namespace Kauppa_Appi
         }
 
         //OHJESIVULLE
-        private void Ohjeisiin_Clicked(object sender, EventArgs e)
+        private void Ohjeisiin_Clicked(object sender, EventArgs e) // <- ohjeisiin button
         {
-            Navigation.PushAsync(new OhjePage()); //Navigoidaan Kaupassakävijät sivulle
+            Navigation.PushAsync(new OhjePage()); //Navigoidaan ohje sivulle
 
         }
     }

@@ -30,7 +30,8 @@
             </Frame>
 
             <Label x:Name="kavija_lataus" />
-
+            
+        <!--Kaupassakävijät listaus-->
         <ListView x:Name="kaList" SelectionMode="Single" Margin="20, 0">
             <ListView.ItemTemplate>
                 <DataTemplate>
