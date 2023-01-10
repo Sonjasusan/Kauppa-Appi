@@ -4,5 +4,75 @@
              x:Class="Kauppa_Appi.App">
     <Application.Resources>
 
+        <!--Taustavärit dark / light -teeman mukaan-->
+        <Color x:Key="WindowbackgroundColor">white</Color>
+        <Color x:Key="WindowBackgroundColorDark">black</Color>
+                
+        <!--Listaukset-->
+        <Color x:Key="Listaus">azure</Color>
+        <Color x:Key="ListausDark">#5A5A5A</Color> 
+                
+        <!--Tekstien värit dark / light -teeman mukaan-->
+        <Color x:Key="TextColor">black</Color>
+        <Color x:Key="TextColorDark">white</Color>
+
+        <!--Tekstien värit buttoneissa dark / light -teeman mukaan-->
+        
+        <!--Muokkaa buttonit-->
+        <Color x:Key="TextColorEdit">green</Color>
+        <Color x:Key="TextColorEditDark">lightgreen</Color>
+
+        <!--Poista buttonit-->
+        <Color x:Key="TextColorDelete">red</Color>
+        <Color x:Key="TextColorDeleteDark">#EE4B2B</Color>
+
+        <!--Labelit-->
+        <Style x:Key="BaseLabel" TargetType="Label">
+            <Setter Property="TextColor"
+                    Value="{AppThemeBinding 
+                           Dark={StaticResource TextColorDark},
+                           Light={StaticResource TextColor}}"/>
+        </Style>
+
+        <!--Listviewt-->
+        <Style x:Key="Listviews" TargetType="ListView">
+            <Setter Property="BackgroundColor"
+                    Value="{AppThemeBinding
+                            Dark={StaticResource ListausDark},
+                             Light={StaticResource Listaus}}"></Setter>
+        </Style>
+
+        <Style x:Key="Stacks" TargetType="StackLayout">
+            <Setter Property="BackgroundColor"
+                    Value="{AppThemeBinding
+                            Dark={StaticResource ListausDark},
+                            Light={StaticResource Listaus}}"/>
+        </Style>
+        
+        <!--Buttonit-->
+        <!--Muokkaa buttonit-->
+        <Style x:Key="ButtonEdit" TargetType="Button">
+            <Setter Property="TextColor"
+                       Value="{AppThemeBinding
+                               Dark={StaticResource TextColorEditDark},
+                                Light={StaticResource TextColorEdit}}"/>
+            <Setter Property="FontSize"
+                    Value="Small"></Setter>
+            <Setter Property="HorizontalOptions"
+                    Value="CenterAndExpand"></Setter>
+        </Style>
+
+        <!--Poista buttonit-->
+        <Style x:Key="ButtonDelete" TargetType="Button">
+            <Setter Property="TextColor"
+                    Value="{AppThemeBinding
+                            Dark={StaticResource TextColorDeleteDark},
+                            Light={StaticResource TextColorDelete}}"/>
+            <Setter Property="FontSize"
+                    Value="Small"></Setter>
+            <Setter Property="HorizontalOptions"
+                    Value="CenterAndExpand"></Setter>
+        </Style>
+
     </Application.Resources>
 </Application>

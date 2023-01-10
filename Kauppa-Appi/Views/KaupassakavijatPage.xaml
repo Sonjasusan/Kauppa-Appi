@@ -2,10 +2,13 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Kauppa_Appi.KaupassakavijatPage"
-             Title="Kauppa-Appi - Kaupassakävijät">
+             Title="Kauppa-Appi - Kaupassakävijät"
+             BackgroundColor="{AppThemeBinding 
+                              Dark={StaticResource WindowBackgroundColorDark}, 
+                              Light={StaticResource WindowbackgroundColor}}">
         <StackLayout>
-            <Frame BackgroundColor="AliceBlue" Padding="16">
-                <Label Text="KauppaAppi"
+            <Frame Padding="16">
+                <Label Text="Kaupassakävijät"
                FontSize="28"
                FontAttributes="Bold"
                TextColor="Blue"
@@ -13,26 +16,39 @@
                FontFamily="Arial"
                HorizontalOptions="CenterAndExpand"/>
             </Frame>
-            <Button x:Name="lisaa" Text="Lisää kaupassakävijä" TextColor="Black" Clicked="Lisaa_Clicked"></Button>
-        <Button x:Name="ohjeisiin" Text="Ohje" TextColor="blue" BackgroundColor="AliceBlue" BorderColor="Blue"
+
+        <!-- Hakukenttä -->
+        <SearchBar BackgroundColor="{AppThemeBinding
+                                         Dark={StaticResource ListausDark},
+                                          Light={StaticResource Listaus}}" Placeholder="Hae kaupassakävijää"
+                   SearchButtonPressed="OnSearchBarButtonPressed" TextChanged="OnTextChanged" CancelButtonColor="Red"/>
+
+        
+        <Button x:Name="lisaa" Text="Lisää kaupassakävijä" Clicked="Lisaa_Clicked"></Button>
+        <Button x:Name="ohjeisiin" Text="Ohje" TextColor="blue" BorderColor="Blue"
                     Clicked="Ohjeisiin_Clicked"></Button>
 
 
-            <!-- Hakukenttä -->
-            <SearchBar BackgroundColor="White" Placeholder="Hae kaupassakävijää"
-                   SearchButtonPressed="OnSearchBarButtonPressed" TextChanged="OnTextChanged" CancelButtonColor="Red"/>
-
-            <Frame BackgroundColor="Azure" Padding="12" CornerRadius="0">
+            <Frame Padding="10" CornerRadius="0"
+                   BackgroundColor="{AppThemeBinding
+                                     Dark={StaticResource ListausDark},
+                                     Light={StaticResource Listaus}}">
                 <Label Text="Valitse kaupassakävijä"
-                   FontSize="18"
-                   TextColor="DarkBlue"
-                   HorizontalOptions="Center"></Label>
+                   FontSize="Medium"
+                   TextColor="{AppThemeBinding
+                    Dark={StaticResource TextColorDark},
+                    Light={StaticResource TextColor}}"
+                   HorizontalOptions="Center"
+                    Style="{StaticResource BaseLabel}"></Label>
             </Frame>
 
             <Label x:Name="kavija_lataus" />
             
         <!--Kaupassakävijät listaus-->
-        <ListView x:Name="kaList" SelectionMode="Single" Margin="20, 0">
+        <ListView x:Name="kaList" SelectionMode="Single" Margin="15, 0"
+                  BackgroundColor="{AppThemeBinding
+                                   Dark={StaticResource ListausDark},
+                                   Light={StaticResource Listaus}}">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <ViewCell>
@@ -55,14 +71,16 @@
         </ListView>
             
         <StackLayout Orientation="Horizontal">
-        <Button x:Name="muokkaa" Text="Muokkaa" TextColor="Green" FontSize="Small" Clicked="Muokkaa_Clicked"></Button>
-        <Button x:Name="poista" Text="Poista" TextColor="Red" FontSize="Small" Clicked="Poista_Clicked"></Button>
+        <Button x:Name="muokkaa" Text="Muokkaa" Style="{StaticResource ButtonEdit}" Clicked="Muokkaa_Clicked"></Button>
+        <Button x:Name="poista" Text="Poista" Style="{StaticResource ButtonDelete}" Clicked="Poista_Clicked"></Button>
             <Button x:Name="navbutton" Text="Kauppaostoslistaan" Clicked="navbutton_Clicked"></Button>
         </StackLayout>
 
 
-            <Frame BackgroundColor="AliceBlue" Padding="16" CornerRadius="0">
-                <Label Text="♥ made by Sonja" HorizontalTextAlignment="Center" TextColor="Gray" FontSize="14"/>
+            <Frame BackgroundColor="{AppThemeBinding
+                   Dark={StaticResource ListausDark},
+                    Light={StaticResource Listaus}}" Padding="12" CornerRadius="0">
+                <Label Text="Kauppa-Appi v.1.1" HorizontalTextAlignment="Center" TextColor="Gray" FontSize="14"/>
             </Frame>
 
         </StackLayout>

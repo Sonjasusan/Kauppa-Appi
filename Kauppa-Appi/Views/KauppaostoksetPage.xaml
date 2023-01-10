@@ -2,17 +2,19 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Kauppa_Appi.KauppaostoksetPage"
-             Title="Kauppa-Appi - Kauppaostokset">
+             Title="Kauppa-Appi"
+             BackgroundColor="{AppThemeBinding 
+                              Dark={StaticResource WindowBackgroundColorDark}, 
+                              Light={StaticResource WindowbackgroundColor}}">
     <ContentPage.Content>
         <StackLayout>
-            <Frame BackgroundColor="AliceBlue" Padding="16">
-                <Label Text="Kauppa-Appi"
+                <Label Text="Kauppaostokset"
                FontSize="28"
                FontAttributes="Bold"
                TextColor="Blue"
                HorizontalTextAlignment="Center"
                HorizontalOptions="CenterAndExpand"/>
-            </Frame>
+            
             <ImageButton Source="info.png"
                          BackgroundColor="Transparent"
                          WidthRequest="35"
@@ -23,36 +25,42 @@
                          Clicked="ImageButton_Clicked"/>
 
 
-            <Button x:Name="startbutton" Text="Merkitse tuote ostettavaksi" Clicked="startbutton_Clicked"></Button>
             <Button x:Name="Lisaa" Text="Lisää tuotteita kauppalistalle" Clicked="Lisaa_Clicked"/>
+            <Button x:Name="startbutton" Text="Merkitse tuote ostettavaksi" Clicked="startbutton_Clicked"></Button>
+            <Button x:Name="ostobutton" Text="Merkitse ostetuksi" Clicked="ostobutton_Clicked"></Button>
+
+
 
             <Label x:Name="ko_lataus" />
             
             <!--Kauppaostoslistaus-->
             <ListView x:Name="koList" SelectionMode="Single"
-                Margin="25, 0" BackgroundColor="Azure">
+                Margin="25, 0" BackgroundColor="{AppThemeBinding
+                                                 Dark={StaticResource ListausDark},
+                                                  Light={StaticResource Listaus}}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextCell Text="{Binding Title}" Detail="{Binding Description}" TextColor="DarkBlue"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
+           
+            <StackLayout Orientation="Vertical">
+
+                <StackLayout Orientation="Horizontal">
+                    <Button x:Name="poistobutton" Text="Poista" Style="{StaticResource ButtonDelete}" Clicked="Poistobutton_Clicked"></Button>
+                    <Button x:Name="Muokkausbutton" Text="Muokkaa" Style="{StaticResource ButtonEdit}" Clicked="Muokkausbutton_Clicked"></Button>
+                </StackLayout>
+            </StackLayout>
 
             <!--Sijainti-->
             <Label x:Name="lat_label"></Label>
             <Label x:Name="lon_label"></Label>
 
-            <StackLayout Orientation="Horizontal">
-
-                <StackLayout Orientation="Horizontal">
-                    <Button x:Name="ostobutton" Text="Merkitse ostetuksi" Clicked="ostobutton_Clicked"></Button>
-                    <Button x:Name="poistobutton" Text="Poista" TextColor="Red" Clicked="Poistobutton_Clicked"></Button>
-                    <Button x:Name="Muokkausbutton" Text="Muokkaa" TextColor="Green" Clicked="Muokkausbutton_Clicked"></Button>
-                </StackLayout>
-            </StackLayout>
-            
-            <Frame BackgroundColor="AliceBlue" Padding="16" CornerRadius="0">
-                <Label Text="♥ made by Sonja" HorizontalTextAlignment="Center" TextColor="Gray" FontSize="14"/>
+            <Frame BackgroundColor="{AppThemeBinding
+                   Dark={StaticResource ListausDark},
+                    Light={StaticResource Listaus}}" Padding="12" CornerRadius="0">
+                <Label Text="Kauppa-Appi v.1.1" HorizontalTextAlignment="Center" TextColor="Gray" FontSize="14"/>
             </Frame>
 
         </StackLayout>
