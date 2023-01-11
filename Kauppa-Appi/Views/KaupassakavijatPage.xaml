@@ -2,18 +2,20 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Kauppa_Appi.KaupassakavijatPage"
-             Title="Kauppa-Appi - Kaupassakävijät"
+             Title="Kauppa-Appi"
              BackgroundColor="{AppThemeBinding 
                               Dark={StaticResource WindowBackgroundColorDark}, 
                               Light={StaticResource WindowbackgroundColor}}">
         <StackLayout>
-            <Frame Padding="16">
+        <Frame Padding="12" CornerRadius="0"
+                   BackgroundColor="{AppThemeBinding
+                   Dark={StaticResource ListausDark},
+                   Light={StaticResource Listaus}}">
                 <Label Text="Kaupassakävijät"
-               FontSize="28"
+               FontSize="24"
                FontAttributes="Bold"
                TextColor="Blue"
                HorizontalTextAlignment="Center"
-               FontFamily="Arial"
                HorizontalOptions="CenterAndExpand"/>
             </Frame>
 

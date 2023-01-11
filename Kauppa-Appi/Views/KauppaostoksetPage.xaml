@@ -8,14 +8,19 @@
                               Light={StaticResource WindowbackgroundColor}}">
     <ContentPage.Content>
         <StackLayout>
+            <Frame Padding="12" CornerRadius="0"
+                   BackgroundColor="{AppThemeBinding
+                   Dark={StaticResource ListausDark},
+                   Light={StaticResource Listaus}}">
                 <Label Text="Kauppaostokset"
-               FontSize="28"
-               FontAttributes="Bold"
-               TextColor="Blue"
-               HorizontalTextAlignment="Center"
-               HorizontalOptions="CenterAndExpand"/>
-            
-            <ImageButton Source="info.png"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="Blue"
+                   HorizontalTextAlignment="Center"
+                   HorizontalOptions="CenterAndExpand"/>
+            </Frame>
+
+                <ImageButton Source="info.png"
                          BackgroundColor="Transparent"
                          WidthRequest="35"
                          HeightRequest="35"
@@ -23,13 +28,10 @@
                          VerticalOptions="EndAndExpand"
                          Aspect="AspectFit"
                          Clicked="ImageButton_Clicked"/>
-
-
+    
             <Button x:Name="Lisaa" Text="Lisää tuotteita kauppalistalle" Clicked="Lisaa_Clicked"/>
             <Button x:Name="startbutton" Text="Merkitse tuote ostettavaksi" Clicked="startbutton_Clicked"></Button>
             <Button x:Name="ostobutton" Text="Merkitse ostetuksi" Clicked="ostobutton_Clicked"></Button>
-
-
 
             <Label x:Name="ko_lataus" />
             
@@ -62,7 +64,6 @@
                     Light={StaticResource Listaus}}" Padding="12" CornerRadius="0">
                 <Label Text="Kauppa-Appi v.1.1" HorizontalTextAlignment="Center" TextColor="Gray" FontSize="14"/>
             </Frame>
-
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -10,7 +10,7 @@
                 
         <!--Listaukset-->
         <Color x:Key="Listaus">azure</Color>
-        <Color x:Key="ListausDark">#5A5A5A</Color> 
+        <Color x:Key="ListausDark">#1C1C1E</Color> 
                 
         <!--Tekstien värit dark / light -teeman mukaan-->
         <Color x:Key="TextColor">black</Color>
@@ -50,6 +50,7 @@
         </Style>
         
         <!--Buttonit-->
+        
         <!--Muokkaa buttonit-->
         <Style x:Key="ButtonEdit" TargetType="Button">
             <Setter Property="TextColor"
