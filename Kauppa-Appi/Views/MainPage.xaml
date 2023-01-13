@@ -15,7 +15,10 @@
                FontSize="34"
                TextColor="Blue"
                Style="{StaticResource BaseLabel}"/>
-        
+
+        <Image Source="grocery.png" BackgroundColor="Transparent" HeightRequest="250" WidthRequest="250"></Image>
+
+
         <Label Text="Tervetuloa käyttämään Kauppa-Appia! Tämä on sovellus kaupassakäymisen helpottamiseen."
                FontSize="18" 
                HorizontalTextAlignment="Center"

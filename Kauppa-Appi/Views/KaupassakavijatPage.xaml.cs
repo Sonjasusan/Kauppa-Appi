@@ -300,7 +300,7 @@ namespace Kauppa_Appi
 
                     if (message.IsSuccessStatusCode)  // Jos onnistuu näytetään alert viesti (Http statuskoodi on 200)
                     {
-                        await DisplayAlert("Valmis!", "Kaupassakävijää muokattu onnistuneesti", "Sulje");
+                        await DisplayAlert("Valmis!", "Kaupassakävijää muokattu onnistuneesti!", "Sulje");
                         await Navigation.PushAsync(new KaupassakavijatPage()); //Päivitetään sivu
                     }
 

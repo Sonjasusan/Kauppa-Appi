@@ -42,7 +42,9 @@
                                                   Light={StaticResource Listaus}}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <TextCell Text="{Binding Title}" Detail="{Binding Description}" TextColor="DarkBlue"/>
+                            <TextCell Text="{Binding Title}" Detail="{Binding Description}" TextColor="{AppThemeBinding
+                                                                                                        Dark={StaticResource TextColorDark},
+                                                                                                         Light={StaticResource TextColor}}"/>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>

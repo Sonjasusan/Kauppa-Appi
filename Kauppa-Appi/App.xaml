@@ -4,6 +4,8 @@
              x:Class="Kauppa_Appi.App">
     <Application.Resources>
 
+        <!--VÄRIT-->
+
         <!--Taustavärit dark / light -teeman mukaan-->
         <Color x:Key="WindowbackgroundColor">white</Color>
         <Color x:Key="WindowBackgroundColorDark">black</Color>
@@ -18,13 +20,21 @@
 
         <!--Tekstien värit buttoneissa dark / light -teeman mukaan-->
         
-        <!--Muokkaa buttonit-->
+        <!--Muokkaa buttonien tekstienvärit-->
         <Color x:Key="TextColorEdit">green</Color>
         <Color x:Key="TextColorEditDark">lightgreen</Color>
 
-        <!--Poista buttonit-->
+        <!--Poista buttonien tekstienvärit-->
         <Color x:Key="TextColorDelete">red</Color>
         <Color x:Key="TextColorDeleteDark">#EE4B2B</Color>
+        
+        <!--Ohje button tekstinväri-->
+        <Color x:Key="TextColorOhjeDark">lightblue</Color>
+        <Color x:Key="TextColorOhje">blue</Color>
+
+
+
+        <!--TYYLIT-->
 
         <!--Labelit-->
         <Style x:Key="BaseLabel" TargetType="Label">
@@ -73,6 +83,17 @@
                     Value="Small"></Setter>
             <Setter Property="HorizontalOptions"
                     Value="CenterAndExpand"></Setter>
+        </Style>
+        
+        <!-- Ohje button-->
+        <Style x:Key="OhjeButton" TargetType="Button">
+            <Setter Property="TextColor"
+                    Value="{AppThemeBinding
+                            Dark={StaticResource TextColorOhjeDark},
+                            Light={StaticResource TextColorOhje}}"></Setter>
+            <Setter Property="FontSize"
+                    Value="Small"></Setter>
+            
         </Style>
 
     </Application.Resources>

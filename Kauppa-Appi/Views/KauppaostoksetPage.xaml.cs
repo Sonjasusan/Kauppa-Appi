@@ -80,7 +80,7 @@ namespace Kauppa_Appi
             kaupId = id; //kaupassakävijän id
 
             //Annetaan latausilmoitukset
-            ko_lataus.Text = "Ladataan kauppaostoksia. . ."; //kauppaostoslistaus
+            ko_lataus.Text = "Ladataan kauppaostoslistaa. . ."; //kauppaostoslistaus
             lon_label.Text = "Haetaan sijaintiasi. . ."; //sijainti
 
 
@@ -133,7 +133,7 @@ namespace Kauppa_Appi
             KauppaOstokset ko = (KauppaOstokset)koList.SelectedItem; //kauppaostos listalta valittu ostos
             if (ko == null) //jos ei olla valittu mitään
             {
-                await DisplayAlert("Valinta puuttuu", "Valitse tuote", "OK"); //ilmoitetaan käyttäjälle että täytyy valita ensin
+                await DisplayAlert("Valinta puuttuu", "Valitse ostettava tuote", "OK"); //ilmoitetaan käyttäjälle että täytyy valita ensin
                 return; //palataan samalle sivulle
             }
             try
@@ -188,7 +188,7 @@ namespace Kauppa_Appi
                 //Kun käyttäjä valitsee tuotteen ostettavaksi (klikkaa "merkitse tuote ostettavaksi" -nappia
                 else if (success == true)
                 {
-                    await DisplayAlert("Tuote merkitty ostettavaksi, ostotapahtuma aloitettu", "Ostotapahtuma on nyt aloitettu, muista merkitä sama tuote ostetuksi kun se on ostettu.", "OK"); //Ilmoitus käyttäjälle
+                    await DisplayAlert("Tuote merkitty ostettavaksi", "Ostotapahtuma on nyt aloitettu, muista merkitä sama tuote ostetuksi.", "OK"); //Ilmoitus käyttäjälle
                 }
 
             }
@@ -205,12 +205,12 @@ namespace Kauppa_Appi
 
             if (ko == null) //valittua tuotetta ei ole
             {
-                await DisplayAlert("Valinta puuttuu", "Valitse ensin tuote", "OK"); //ilmoitus käyttäjälle
+                await DisplayAlert("Valinta puuttuu", "Valitse ensin ostetuksi merkattava tuote", "OK"); //ilmoitus käyttäjälle
                 return; //palataan samalle sivulle
             }
 
             //Kun tuotteen merkitseminen ostetuksi onnistuu, käyttäjää pyydetään antamaan kommentti
-            string result = await DisplayPromptAsync("Kommentti", "Kirjoita vapaaehtoinen kommentti ostosreissusta");
+            string result = await DisplayPromptAsync("Kommentti", "Kirjoita vapaaehtoinen kommentti ostokokemuksesta");
 
             try
             {
@@ -321,7 +321,7 @@ namespace Kauppa_Appi
 
                 if (success)  // Jos onnistuu näytetään alert viesti -> success = true
                 {
-                    await DisplayAlert("Valmis!", "Tuote on nyt lisätty onnistuneesti kauppalistalle", "Sulje");
+                    await DisplayAlert("Valmis!", "Tuote on nyt lisätty onnistuneesti kauppalistalle!", "Sulje");
                     LoadDataFromRestAPI(); //ajaa ylläolevan metodin (lataa sivun tietoineen)
                 }
 
@@ -375,7 +375,7 @@ namespace Kauppa_Appi
 
              if (response.IsSuccessStatusCode)  // Jos onnistuu näytetään alert viesti -> Http statuskoodi on 200
              {
-                  await DisplayAlert("Valmis!", "Tuote on nyt poistettu onnistuneesti kauppalistalta", "Sulje");
+                  await DisplayAlert("Valmis", "Tuote on nyt poistettu onnistuneesti kauppalistalta!", "Sulje");
                   LoadDataFromRestAPI(); //päivitetään sivu (ladataan uudestaan ajamalla LoadDataFromRestAPI(); -metodi)
               }
 
@@ -456,7 +456,7 @@ namespace Kauppa_Appi
 
                 if (message.IsSuccessStatusCode)  // Jos onnistuu näytetään alert viesti (Http statuskoodi on 200)
                 {
-                    await DisplayAlert("Valmis!", "Tuotetta muokattu onnistuneesti", "Sulje");
+                    await DisplayAlert("Valmis!", "Tuotetta muokattu onnistuneesti!", "Sulje");
                     LoadDataFromRestAPI(); //päivitetään sivu ajamalla LoadDataFromRestApi -metodin (lataa sivun tietoineen uudelleen)
                 }
 
