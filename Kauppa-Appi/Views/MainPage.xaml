@@ -28,11 +28,5 @@
 
         <Button x:Name="kaupassakavijatsivulle" Text="Aloita Kauppa-Apin käyttö" Clicked="kaupassakavijatsivulle_Clicked">
         </Button>
-
-
     </FlexLayout>
-
-    <!--<Frame BackgroundColor="AliceBlue" Padding="16" CornerRadius="0">
-        <Label Text="♥ made by Sonja" HorizontalTextAlignment="Center" TextColor="Gray" FontSize="12"/>
-    </Frame>-->
-</ContentPage>
+   </ContentPage>

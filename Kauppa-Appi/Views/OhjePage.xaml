@@ -7,13 +7,13 @@
     <FlexLayout Direction="Column"
                 AlignItems="Center"
                 JustifyContent="SpaceEvenly">
-        
+
         <Label Text="Kauppa-Appi ohjeet"
                FontSize="Title"
                TextColor="Blue"/>
 
         <Label Text="Tervetuloa käyttämään Kauppa-Appia, tältä sivulta löydät tärkeimmät ohjeet sovelluksen käyttöön!" FontSize="16" HorizontalTextAlignment="Center"></Label>
-        
+
         <Label Text="Kaupassakävijät sivulla voit luoda kaupassakävijän tarpeesi mukaan." FontSize="16" HorizontalTextAlignment="Center"></Label>
 
         <Label Text="Kun olet luonut kaupassakävijän pääset navigoimaan kauppaostokset sivulle valitsemalla ensin kaupassakävijän." FontSize="16" HorizontalTextAlignment="Center"/>
@@ -29,8 +29,5 @@
 
 
         <Button x:Name="kaupassakavijoihin" Text="Aloitussivulle - Kaupassakavijöihin" Clicked="kaupassakavijoihin_Clicked"></Button>
-        
-        
     </FlexLayout>
-
 </ContentPage>

@@ -86,7 +86,7 @@
         <Frame BackgroundColor="{AppThemeBinding
                    Dark={StaticResource ListausDark},
                     Light={StaticResource Listaus}}" Padding="12" CornerRadius="0">
-            <Label Text="Kauppa-Appi v.1.1" HorizontalTextAlignment="Center" TextColor="Gray" FontSize="14"/>
+            <Label Text="Kauppa-Appi v.1.0" HorizontalTextAlignment="Center" TextColor="Gray" FontSize="14"/>
         </Frame>
     </StackLayout>
 </ContentPage>
