@@ -17,7 +17,7 @@ public partial class OhjePage : ContentPage
         InitializeComponent();
     }
 
-        private void kaupassakavijoihin_Clicked(object sender, EventArgs e)
+        private void kaupassakavijoihin_Clicked(object sender, EventArgs e) // <- buttoni
         {
             Navigation.PushAsync(new KaupassakavijatPage()); //Navigoidaan Kaupassakävijät sivulle
         }

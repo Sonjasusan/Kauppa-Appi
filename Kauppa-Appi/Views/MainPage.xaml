@@ -1,7 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Kauppa_Appi.MainPage">
+             x:Class="Kauppa_Appi.MainPage"
+              BackgroundColor="{AppThemeBinding 
+                              Dark={StaticResource WindowBackgroundColorDark}, 
+                              Light={StaticResource WindowbackgroundColor}}">
+
 
     <FlexLayout Direction="Column"
                 AlignItems="Center"
@@ -9,20 +13,20 @@
 
         <Label Text="Kauppa-Appi"
                FontSize="34"
-               TextColor="Blue"/>
-        
+               TextColor="Blue"
+               Style="{StaticResource BaseLabel}"/>
+
+        <Image Source="grocery.png" BackgroundColor="Transparent" HeightRequest="250" WidthRequest="250"></Image>
+
+
         <Label Text="Tervetuloa käyttämään Kauppa-Appia! Tämä on sovellus kaupassakäymisen helpottamiseen."
                FontSize="18" 
                HorizontalTextAlignment="Center"
-               TextColor="Black"/>
+               TextColor="{AppThemeBinding
+                           Dark={StaticResource TextColorDark},
+                            Light={StaticResource TextColor}}"/>
 
         <Button x:Name="kaupassakavijatsivulle" Text="Aloita Kauppa-Apin käyttö" Clicked="kaupassakavijatsivulle_Clicked">
         </Button>
-
-
     </FlexLayout>
-
-    <!--<Frame BackgroundColor="AliceBlue" Padding="16" CornerRadius="0">
-        <Label Text="♥ made by Sonja" HorizontalTextAlignment="Center" TextColor="Gray" FontSize="12"/>
-    </Frame>-->
-</ContentPage>
+   </ContentPage>

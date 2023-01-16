@@ -1,23 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Kauppa_Appi.OhjePage">
-    <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Tervetuloa käyttämään Kauppa-Appia, tältä sivulta löydät käyttö-ohjeet!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-            <StackLayout>
-                <Label Text="Kaupassakävijät sivulla voit luoda kaupassakävijän tarpeesi mukaan." TextColor="blue"></Label>
-                <Label Text="Kun olet luonut kaupassakävijän pääset navigoimaan kauppaostokset sivulle valitsemalla ensin kaupassakävijän."></Label>
-            </StackLayout>
+             x:Class="Kauppa_Appi.OhjePage"
+             Title="Kauppa-Appi">
 
-            <StackLayout>
-                <Label Text="Versio 1.2"></Label>
-            </StackLayout>
+    <FlexLayout Direction="Column"
+                AlignItems="Center"
+                JustifyContent="SpaceEvenly">
 
-            
-            <Button x:Name="kaupassakavijoihin" Text="Kaupassakavijöihin" Clicked="kaupassakavijoihin_Clicked"></Button>
-        </StackLayout>
-    </ContentPage.Content>
+        <Label Text="Kauppa-Appi ohjeet"
+               FontSize="Title"
+               TextColor="Blue"/>
+
+        <Label Text="Tervetuloa käyttämään Kauppa-Appia, tältä sivulta löydät tärkeimmät ohjeet sovelluksen käyttöön!" FontSize="16" HorizontalTextAlignment="Center"></Label>
+
+        <Label Text="Kaupassakävijät sivulla voit luoda kaupassakävijän tarpeesi mukaan." FontSize="16" HorizontalTextAlignment="Center"></Label>
+
+        <Label Text="Kun olet luonut kaupassakävijän pääset navigoimaan kauppaostokset sivulle valitsemalla ensin kaupassakävijän." FontSize="16" HorizontalTextAlignment="Center"/>
+
+        <Label Text="Kauppaostoslista -sivulla pääset lisäämään tuotteita listalle, muokkaamaan tai poistamaan niitä." FontSize="16" HorizontalTextAlignment="Center"/>
+
+        <Label Text="Kauppaostos -sivulla, voit merkata tuotteita yksitellen ostettavaksi ja ostetuksi: Ensin pitää valita tuote, jonka aiot ostaa ja sitten valita se ostettavaksi ja lopuksi merkata ostetuksi." FontSize="16" HorizontalTextAlignment="Center"/>
+
+        <Label Text="Kauppalista päivittyy sitä mukaan kun tuotteita muokataan, lisätään, poistetaan tai merkataan ostetuksi." FontSize="16" HorizontalTextAlignment="Center"/>
+
+        <Label Text="Mukavia kauppareissuja ♥" HorizontalTextAlignment="Center" FontSize="Large"/>
+        <Image Source="grocery.png" BackgroundColor="Transparent" HeightRequest="100" WidthRequest="100"></Image>
+
+
+        <Button x:Name="kaupassakavijoihin" Text="Aloitussivulle - Kaupassakavijöihin" Clicked="kaupassakavijoihin_Clicked"></Button>
+    </FlexLayout>
 </ContentPage>
