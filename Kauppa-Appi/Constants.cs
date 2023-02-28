@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Kauppa_Appi
@@ -8,5 +9,6 @@ namespace Kauppa_Appi
 {
         //azurea varten
         public static string ServiceUri = "https://kauppaappibackend.azurewebsites.net";
-}
+      
+    }
 }

@@ -61,8 +61,8 @@ namespace Kauppa_Appi
 #else
                     HttpClient client = new HttpClient();
 #endif
-                    //client.BaseAddress = new Uri("https://10.0.2.2:7292/"); <-lokaali                   
-                    client.BaseAddress = new Uri(Constants.ServiceUri); //<- Käytetään Constants.cs:ssä määritetty azuren osoitetta
+                    client.BaseAddress = new Uri("https://10.0.2.2:7292/"); /*< -lokaali*/
+                    //client.BaseAddress = new Uri(Constants.ServiceUri); //<- Käytetään Constants.cs:ssä määritetty azuren osoitetta
                     string json = await client.GetStringAsync("api/kaupassakavijat");
 
                     IEnumerable<Kaupassakavijat> kaupassakavijat = JsonConvert.DeserializeObject<Kaupassakavijat[]>(json);
@@ -148,8 +148,8 @@ namespace Kauppa_Appi
                 //#else
                 //HttpClient client = new HttpClient();
                 //#endif
-                //client.BaseAddress = new Uri("https://10.0.2.2:7292/"); //lokaalia ajoa varten
-                client.BaseAddress = new Uri(Constants.ServiceUri); //Constans.cs:ssä määritetty azure osoite
+                client.BaseAddress = new Uri("https://10.0.2.2:7292/"); //lokaalia ajoa varten
+                //client.BaseAddress = new Uri(Constants.ServiceUri); //Constans.cs:ssä määritetty azure osoite
 
                 // Muutetaan em. data objekti Jsoniksi
                 string input = JsonConvert.SerializeObject(kavija);
@@ -209,7 +209,9 @@ namespace Kauppa_Appi
             {
                     HttpClientHandler insecureHandler = GetInsecureHandler();
                     HttpClient client = new HttpClient(insecureHandler);
-                    client.BaseAddress = new Uri(Constants.ServiceUri); //Constants:ssa oleva azure backendi osoite
+                    //client.BaseAddress = new Uri(Constants.ServiceUri); //Constants:ssa oleva azure backendi osoite
+                    client.BaseAddress = new Uri("https://10.0.2.2:7292/"); //lokaalia ajoa varten
+
 
 
                     string input = JsonConvert.SerializeObject(id); //konvertoidaan jsoniksi
@@ -284,8 +286,8 @@ namespace Kauppa_Appi
                     //#else
                     //HttpClient client = new HttpClient();
                     //#endif
-                    //client.BaseAddress = new Uri("https://10.0.2.2:7292/");
-                    client.BaseAddress = new Uri(Constants.ServiceUri);
+                    client.BaseAddress = new Uri("https://10.0.2.2:7292/");
+                    //client.BaseAddress = new Uri(Constants.ServiceUri);
 
                     // Muutetaan em. data objekti Jsoniksi
                     string input = JsonConvert.SerializeObject(muokattavaKavija);
