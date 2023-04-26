@@ -72,5 +72,5 @@ In dark mode, the entire application has a black theme and the colors of texts, 
 In light mode, the application has a light appearance with a few bluish details.
 
 
-~ _The mobile application was implemented using Visual Studio and Xamarin, with C# as the programming language. Behind it runs a Restful API application implemented with ASP .NET Core, which is responsible for carrying out user actions. The Backend has its own repo named "BackEndKauppaAppi"_
+~ _The mobile application was implemented using Visual Studio and Xamarin, with C# as the programming language. Behind it runs a Restful API application implemented with ASP .NET Core, which is responsible for carrying out user actions. The Backend has its own repo named "BackEndKauppaAppi". Application and the github version control (pushes and issues) are made in finnish._
 
